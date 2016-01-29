@@ -1,0 +1,98 @@
+<resources>
+    <!-- App -->
+    <string name="sunriser">Sunriser</string>
+
+    <!-- Main Activity -->
+    <string name="welcome">Wake up like a boss</string>
+    <string name="welcome_desc">Sunriser will gradually wake you up before your next scheduled alarm. Sweet dreams!</string>
+
+    <!-- Main Menu -->
+    <string name="action_test">Test</string>
+    <string name="action_kill_light">Kill Light</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Sunrise Scheduler Countdown -->
+    <string name="sunrise_countdown">Sunrise in %1$s</string>
+
+    <!-- Setting Categories -->
+    <string name="milight">MiLight</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="daylight">Daylight</string>
+
+    <!-- Master Switch -->
+    <string name="enable">Master Switch</string>
+    <string name="enable_desc">Enable or disable the app</string>
+    <string name="enable_pref">enable</string>
+    <string name="enable_pref_default">true</string>
+
+    <!-- Sunrise Duration -->
+    <string name="sunrise_duration">Sunrise Duration</string>
+    <string name="sunrise_duration_desc" formatted="false">The time it takes (in minutes) to transition from 0% to 100% brightness</string>
+    <string name="sunrise_duration_pref">sunrise_duration</string>
+    <string name="sunrise_duration_default">25</string>
+
+    <!-- Sunrise Headstart -->
+    <string name="sunrise_headstart">Sunrise Headstart</string>
+    <string name="sunrise_headstart_desc">Start the sunrise X minutes before the alarm clock</string>
+    <string name="sunrise_headstart_pref">sunrise_headstart</string>
+    <string name="sunrise_headstart_default">30</string>
+
+    <!-- Daylight Forever -->
+    <string name="daylight_forever">Daylight Forever</string>
+    <string name="daylight_forever_desc">Leave the light on forever after sunrise ends</string>
+    <string name="daylight_forever_pref">daylight_forever</string>
+    <string name="daylight_forever_default">false</string>
+
+    <!-- Daylight Duration -->
+    <string name="daylight_duration">Daylight Duration</string>
+    <string name="daylight_duration_desc">Leave the light on for X minutes after sunrise ends</string>
+    <string name="daylight_duration_pref">daylight_duration</string>
+    <string name="daylight_duration_default">20</string>
+
+    <!-- MiLight Zone -->
+    <string name="zone">Light Zone</string>
+    <string name="zone_desc">Choose the desired light zone</string>
+    <string name="zone_pref">milight_zone</string>
+    <string name="zone_default">4</string>
+
+    <!-- MiLight Host -->
+    <string name="host">Router Host</string>
+    <string name="host_desc">Enter the hostname of the light router</string>
+    <string name="host_pref">milight_host</string>
+    <string name="host_default">255.255.255.255</string>
+
+    <!-- MiLight Port -->
+    <string name="port">Router Port</string>
+    <string name="port_desc">Enter the port number of the light router</string>
+    <string name="port_pref">milight_port</string>
+    <string name="port_default">8899</string>
+
+    <!-- Wifi Error Dialog -->
+    <string name="connect_wifi">Connect to Wi-Fi</string>
+    <string name="connect_wifi_desc">Please connect to the same Wi-Fi network as your MiLight router.</string>
+
+    <!-- No Alarms Error Dialog -->
+    <string name="no_alarms">No Alarms</string>
+    <string name="no_alarms_desc">There are no system alarms currently scheduled. Please schedule an alarm and try again.</string>
+
+    <!-- Dialog Buttons -->
+    <string name="ok">OK</string>
+
+    <!-- Zone Selection Titles -->
+    <string-array name="zone_titles">
+        <item>All Zones</item>
+        <item>Zone 1</item>
+        <item>Zone 2</item>
+        <item>Zone 3</item>
+        <item>Zone 4</item>
+    </string-array>
+
+    <!-- Zone Selection Values -->
+    <string-array name="zone_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

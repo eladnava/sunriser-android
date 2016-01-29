@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    package="com.eladnava.sunriser"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/sunriser"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <!-- Main Activity -->
+        <activity
+            android:name=".activities.Main"
+            android:label="@string/sunriser"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Settings Activity -->
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/action_settings"
+            android:parentActivityName=".activities.Main">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.eladnava.sunriser.activities.Main"/>
+        </activity>
+
+        <!-- Sunrise Alarm Service -->
+        <service android:name=".services.SunriseAlarm"/>
+
+        <!-- Boot Completed Receiver -->
+        <receiver android:name=".receivers.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Alarm Changed Receiver -->
+        <receiver android:name=".receivers.AlarmChangedReceiver">
+            <intent-filter>
+                <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED"/>
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
