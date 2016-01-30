@@ -21,6 +21,7 @@ Research shows that the healthiest way to wake up is along with the sun rising a
 # Requirements
 * Android SDK
 * Android Studio with Gradle Plugin
+* Milight RGBW light bulb + Milight router
 * A physical device to test on (recommended) running Android 5.0 or later
 
 # Collaborating
