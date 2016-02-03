@@ -1,5 +1,7 @@
 # Sunriser for Android
 
+[![Join the chat at https://gitter.im/eladnava/sunriser-android](https://badges.gitter.im/eladnava/sunriser-android.svg)](https://gitter.im/eladnava/sunriser-android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Sunriser is an Android app that integrates with [Milight RGBW connected light bulbs](http://www.milight.com/milight-rgbw/) to gradually wake you up in the morning. It starts emitting an artificial sunrise 30 minutes before your scheduled alarm, causing your body to release hormones that will help you wake up easily, feeling refreshed and ready to start your day.
 
 * [Google Play Listing](https://play.google.com/store/apps/details?id=com.eladnava.sunriser)
@@ -19,6 +21,7 @@ Research shows that the healthiest way to wake up is along with the sun rising a
 # Requirements
 * Android SDK
 * Android Studio with Gradle Plugin
+* Milight RGBW light bulb + Milight router
 * A physical device to test on (recommended) running Android 5.0 or later
 
 # Collaborating
