@@ -10,6 +10,10 @@
           android:title="@string/action_kill_light"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:id="@+id/action_moonlight"
+          android:title="@string/action_moonlight"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:orderInCategory="100"

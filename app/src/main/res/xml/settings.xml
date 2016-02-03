@@ -46,6 +46,15 @@
             android:dependency="@string/daylight_forever_pref"/>
     </PreferenceCategory>
     <PreferenceCategory
+        android:title="@string/moonlight">
+        <EditTextPreference
+            android:key="@string/moonlight_duration_pref"
+            android:title="@string/moonlight_duration"
+            android:inputType="number"
+            android:summary="@string/moonlight_duration_desc"
+            android:defaultValue="@string/moonlight_duration_default"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/milight">
         <ListPreference
             android:key="@string/zone_pref"
