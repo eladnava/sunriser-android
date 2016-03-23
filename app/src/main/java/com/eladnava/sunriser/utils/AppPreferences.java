@@ -6,16 +6,16 @@ import com.eladnava.sunriser.R;
 
 public class AppPreferences
 {
-    public static int getMiLightZone(Context context)
-    {
-        // Get zone from SharedPreferences and convert to int
-        return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.zone_pref), context.getString(R.string.zone_default)));
-    }
-
     public static boolean isAppEnabled(Context context)
     {
         // Return enabled/disabled flag from SharedPreferences (defaults to true)
         return SystemServices.getSharedPreferences(context).getBoolean(context.getString(R.string.enable_pref), context.getString(R.string.enable_pref_default) == "true");
+    }
+
+    public static int getMiLightZone(Context context)
+    {
+        // Get zone from SharedPreferences and convert to int
+        return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.zone_pref), context.getString(R.string.zone_default)));
     }
 
     public static boolean isDaylightForeverEnabled(Context context)
