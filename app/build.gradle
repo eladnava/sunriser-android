@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.eladnava.sunriser"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 10010
         versionName "1.0.1"
