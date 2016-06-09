@@ -3,12 +3,14 @@ package com.eladnava.sunriser.alarms;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Log;
+import android.os.Build;
+import android.text.format.DateFormat;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.Locale;
 
 import com.eladnava.sunriser.utils.SystemServices;
 
@@ -17,14 +19,16 @@ public class SystemClock
     @SuppressWarnings("deprecation")
     public static long getNextAlarmTriggerTimestamp(Context context)
     {
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             // API >= 21: use getNextAlarmClock()
 
             // Acquire an instance of the system-wide alarm manager
             AlarmManager alarmManager = SystemServices.getAlarmManager(context);
+
             // Query for next alarm info
             AlarmManager.AlarmClockInfo nextAlarm = alarmManager.getNextAlarmClock();
+
             // No scheduled alarm?
             if (nextAlarm == null) {
                 return 0;
@@ -38,17 +42,19 @@ public class SystemClock
 
             // Get next scheduled alarm
             String nextAlarm = Settings.System.getString(context.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED);
+
             // No scheduled alarm?
             if ((nextAlarm == null) || ("".equals(nextAlarm))) {
                 return 0;
             }
+
             // Get day, hour and minute for next alarm as a Date object
             Date alarmDate;
-            String format = android.text.format.DateFormat.is24HourFormat(context) ? "E k:mm" : "E h:mm aa";
-            DateFormat dateFormat = new SimpleDateFormat(format, java.util.Locale.getDefault() );
+            String format = DateFormat.is24HourFormat(context) ? "E k:mm" : "E h:mm aa";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, Locale.getDefault() );
             try {
-                alarmDate = dateFormat.parse(nextAlarm);
-            }catch (java.text.ParseException e) {
+                alarmDate = simpleDateFormat.parse(nextAlarm);
+            }catch (ParseException e) {
                 return 0;
             }
 
