@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.support.annotation.Nullable;
 
+import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.integrations.MiLightIntegration;
 import com.eladnava.sunriser.utils.AppPreferences;
@@ -36,11 +37,51 @@ public class SunriseAlarm extends Service
             // Determine whether we are testing the alarm
             boolean testMode = intent.getBooleanExtra(IntentExtras.SUNRISE_ALARM_TEST, false);
 
-            // Run the sunrise alarm async (since we can't issue network calls on service's main thread)
-            mAlarmTask = new AsyncSunriseAlarm();
+            boolean doAlarm;
+            // TODO: determine if we should be running the alarm right now.
+            doAlarm = false;
+            // Acquire next system alarm timestamp (in UTC)
+            long nextAlarm = SystemClock.getNextAlarmTriggerTimestamp(this);
 
-            // Start it
-            mAlarmTask.execute(testMode);
+            // No alarm scheduled?
+            if ( nextAlarm != 0 )
+            {
+                // Get current time (UTC)
+                long now = System.currentTimeMillis();
+
+                // Calculate when the sunrise alarm should commence (prior to the scheduled system alarm)
+                long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(this) * 60 * 1000);
+
+                // Check if the sunrise should start now - within 1 minute of current time
+                if (Math.abs(startSunrise - now) < 60*1000)
+                {
+                    // do the sunrise
+                    doAlarm = true;
+                }
+                else
+                {
+                    Log.d(Logging.TAG, "SunriseAlarm: Alarm should not happen now, aborting");
+                }
+            }
+            else
+            {
+                Log.d(Logging.TAG, "SunriseAlarm: No alarm set, aborting");
+            }
+
+
+            if(testMode || doAlarm)
+            {
+                // Run the sunrise alarm async (since we can't issue network calls on service's main thread)
+                mAlarmTask = new AsyncSunriseAlarm();
+
+                // Start it
+                mAlarmTask.execute(testMode);
+            }
+            else
+            {
+                // we missed the alarm, kill
+                stopSelf();
+            }
         }
         else
         {
