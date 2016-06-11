@@ -16,6 +16,8 @@ import com.eladnava.sunriser.utils.SystemServices;
 
 public class SunriseScheduler
 {
+    private static long nextAlarmOld = 0;
+
     public static void rescheduleSunriseAlarm(Context context, boolean showToast)
     {
         // Clear all previously-scheduled sunrise alarms
@@ -24,12 +26,12 @@ public class SunriseScheduler
         // App disabled?
         if (!AppPreferences.isAppEnabled(context))
         {
+            // Clear all previously-scheduled sunrise alarms
+            SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
+
             // Don't reschedule any alarms
             return;
         }
-
-        // Get current time (UTC)
-        long now = System.currentTimeMillis();
 
         // Acquire next system alarm timestamp (in UTC)
         long nextAlarm = SystemClock.getNextAlarmTriggerTimestamp(context);
@@ -37,9 +39,28 @@ public class SunriseScheduler
         // No alarm scheduled?
         if ( nextAlarm == 0 )
         {
+            // Clear all previously-scheduled sunrise alarms
+            SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
+
+            nextAlarmOld = nextAlarm;
+
             // Nothing to schedule, then
             return;
         }
+        if( nextAlarm == nextAlarmOld )
+        {
+            // Alarm has not changed since last check. Do nothing.
+            return;
+        }
+
+        // Alarm has changed, or no previous alarm set. Set a new sunrise alarm
+        nextAlarmOld = nextAlarm;
+
+        // Clear all previously-scheduled sunrise alarms
+        SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
+
+        // Get current time (UTC)
+        long now = System.currentTimeMillis();
 
         // Calculate when the sunrise alarm should commence (prior to the scheduled system alarm)
         long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(context) * 60 * 1000);
