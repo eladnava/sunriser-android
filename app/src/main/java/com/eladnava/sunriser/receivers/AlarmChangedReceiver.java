@@ -15,7 +15,7 @@ public class AlarmChangedReceiver extends BroadcastReceiver
     public void onReceive(Context context, Intent intent)
     {
         // Make sure the right intent was provided
-        if (intent.getAction().equals(AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED))
+            if (intent.getAction().equals(AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED))
         {
             // Log the event
             Log.d(Logging.TAG, "Alarm clock changed");
