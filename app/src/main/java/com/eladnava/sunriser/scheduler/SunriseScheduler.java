@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
+
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.services.SunriseAlarm;
 import com.eladnava.sunriser.utils.AppPreferences;
+import com.eladnava.sunriser.utils.SimpleNotify;
 import com.eladnava.sunriser.utils.formatters.CountdownFormatter;
 import com.eladnava.sunriser.utils.SystemServices;
 
@@ -44,17 +46,22 @@ public class SunriseScheduler
 
             nextAlarmOld = nextAlarm;
 
+            SimpleNotify.notify("SunriseScheduler", "No alarm set", context);
+
             // Nothing to schedule, then
             return;
         }
+
         if( nextAlarm == nextAlarmOld )
         {
+            SimpleNotify.notify("SunriseScheduler", "Alarm unchanged. No need to set.", context);
+
             // Alarm has not changed since last check. Do nothing.
             return;
         }
 
         // Alarm has changed, or no previous alarm set. Set a new sunrise alarm
-        nextAlarmOld = nextAlarm;
+        //nextAlarmOld = nextAlarm;
 
         // Clear all previously-scheduled sunrise alarms
         SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
@@ -69,6 +76,7 @@ public class SunriseScheduler
         if (startSunrise < now)
         {
             // Don't schedule a sunrise alarm in the past
+            SimpleNotify.notify("SunriseScheduler", "Sunrise already happened", context);
             return;
         }
 
@@ -85,9 +93,17 @@ public class SunriseScheduler
             Toast.makeText(context, countdownMessage, Toast.LENGTH_LONG).show();
         }
 
+
+        //SimpleNotify.notify("SunriseScheduler", countdownMessage, context);
+        SimpleNotify.notify("SunriseScheduler Set:", "Was "+nextAlarmOld+" now "+nextAlarm, context);
+
         // Log the countdown
         Log.d(Logging.TAG, countdownMessage);
+
+        nextAlarmOld = nextAlarm;
+
     }
+
 
     private static PendingIntent getSunriseAlarmPendingIntent(Context context)
     {

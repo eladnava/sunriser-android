@@ -7,8 +7,8 @@ import android.os.Build;
 import android.util.Log;
 
 import com.eladnava.sunriser.config.Logging;
-import com.eladnava.sunriser.scheduler.CheckSystemAlarmScheduler;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
+import com.eladnava.sunriser.services.CheckSystemAlarm;
 
 public class BootReceiver extends BroadcastReceiver
 {
@@ -24,9 +24,9 @@ public class BootReceiver extends BroadcastReceiver
             // Reschedule sunrise alarm (without toast)
             SunriseScheduler.rescheduleSunriseAlarm(context, false);
 
-            // For API<21: Schedule CheckSystemAlarmScheduler
+            // For API<21: Schedule CheckSystemAlarm
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                CheckSystemAlarmScheduler.scheduleCheckSystemAlarm(context);
+                CheckSystemAlarm.scheduleCheckSystemAlarm(context);
             }
         }
     }

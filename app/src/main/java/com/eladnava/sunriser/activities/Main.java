@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import com.eladnava.sunriser.R;
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
-import com.eladnava.sunriser.scheduler.CheckSystemAlarmScheduler;
+import com.eladnava.sunriser.services.CheckSystemAlarm;
 import com.eladnava.sunriser.services.SunriseAlarm;
 import com.eladnava.sunriser.utils.Networking;
 import com.eladnava.sunriser.utils.ThreadUtils;
@@ -38,9 +38,9 @@ public class Main extends AppCompatActivity
         // Set up activity UI
         initializeUI();
 
-        // For API<21: Schedule CheckSystemAlarmScheduler
+        // For API<21: Schedule CheckSystemAlarm
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            CheckSystemAlarmScheduler.scheduleCheckSystemAlarm(this);
+            CheckSystemAlarm.scheduleCheckSystemAlarm(this);
         }
 
     }
@@ -74,7 +74,7 @@ public class Main extends AppCompatActivity
     {
         if(isFinishing()) {
             // kill all alarms
-            CheckSystemAlarmScheduler.stopCheckSystemAlarm(this);
+            CheckSystemAlarm.stopCheckSystemAlarm(this);
         }
 
         super.onDestroy();
