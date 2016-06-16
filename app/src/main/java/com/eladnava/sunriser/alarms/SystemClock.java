@@ -68,6 +68,7 @@ public class SystemClock
             nextAlarmCal.set(Calendar.HOUR_OF_DAY, nextAlarmIncomplete.get(Calendar.HOUR_OF_DAY));
             nextAlarmCal.set(Calendar.MINUTE, nextAlarmIncomplete.get(Calendar.MINUTE));
             nextAlarmCal.set(Calendar.SECOND, 0);
+            nextAlarmCal.set(Calendar.MILLISECOND, 0);
 
             // if the alarm is next week we have wrong date now (in the past). Adding 7 days should fix this
             if (nextAlarmCal.before(Calendar.getInstance())) {

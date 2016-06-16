@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -52,6 +54,9 @@
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:process=":remote" android:name=".services.CheckSystemAlarm"></receiver>
+
     </application>
 
 </manifest>
