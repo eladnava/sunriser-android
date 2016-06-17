@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.services.SunriseAlarm;
@@ -18,8 +17,6 @@ import com.eladnava.sunriser.utils.SystemServices;
 
 public class SunriseScheduler
 {
-    private static long nextAlarmOld = 0;
-
     public static void rescheduleSunriseAlarm(Context context, boolean showToast)
     {
         // Clear all previously-scheduled sunrise alarms
@@ -28,9 +25,6 @@ public class SunriseScheduler
         // App disabled?
         if (!AppPreferences.isAppEnabled(context))
         {
-            // Clear all previously-scheduled sunrise alarms
-            SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
-
             // Don't reschedule any alarms
             return;
         }
@@ -41,30 +35,12 @@ public class SunriseScheduler
         // No alarm scheduled?
         if ( nextAlarm == 0 )
         {
-            // Clear all previously-scheduled sunrise alarms
-            SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
-
-            nextAlarmOld = nextAlarm;
-
             SimpleNotify.notify("SunriseScheduler", "No alarm set", context);
 
-            // Nothing to schedule, then
+            // Nothing to schedule
             return;
         }
-
-        if( nextAlarm == nextAlarmOld )
-        {
-            SimpleNotify.notify("SunriseScheduler", "Alarm unchanged. No need to set.", context);
-
-            // Alarm has not changed since last check. Do nothing.
-            return;
-        }
-
         // Alarm has changed, or no previous alarm set. Set a new sunrise alarm
-        //nextAlarmOld = nextAlarm;
-
-        // Clear all previously-scheduled sunrise alarms
-        SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
 
         // Get current time (UTC)
         long now = System.currentTimeMillis();
@@ -73,10 +49,11 @@ public class SunriseScheduler
         long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(context) * 60 * 1000);
 
         // Sunrise should have started already? (If next alarm is scheduled within the headstart time)
-        if (startSunrise < now)
+        // Allow alarms that should have triggered within the last 5 seconds, as we may be checking as the alarm is going off.
+        if (startSunrise < (now-5000))
         {
-            // Don't schedule a sunrise alarm in the past
             SimpleNotify.notify("SunriseScheduler", "Sunrise already happened", context);
+            // Don't schedule a sunrise alarm in the past
             return;
         }
 
@@ -93,15 +70,11 @@ public class SunriseScheduler
             Toast.makeText(context, countdownMessage, Toast.LENGTH_LONG).show();
         }
 
-
-        //SimpleNotify.notify("SunriseScheduler", countdownMessage, context);
-        SimpleNotify.notify("SunriseScheduler Set:", "Was "+nextAlarmOld+" now "+nextAlarm, context);
+        SimpleNotify.notify("SunriseScheduler", countdownMessage, context);
+        //SimpleNotify.notify("SunriseScheduler Set:", "Was "+nextAlarmOld+" now "+nextAlarm, context);
 
         // Log the countdown
         Log.d(Logging.TAG, countdownMessage);
-
-        nextAlarmOld = nextAlarm;
-
     }
 
 

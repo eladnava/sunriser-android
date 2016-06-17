@@ -59,7 +59,7 @@ public class Main extends AppCompatActivity
         super.onResume();
 
         // Force Wi-Fi connection to use the app
-        requireWiFiConnectivity();
+        //requireWiFiConnectivity();
 
         // Check for a scheduled system alarm
         requireScheduledSystemAlarm();
