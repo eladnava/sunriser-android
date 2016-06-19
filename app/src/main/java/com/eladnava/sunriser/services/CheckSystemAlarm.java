@@ -10,13 +10,12 @@ import android.util.Log;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
 import com.eladnava.sunriser.utils.AppPreferences;
-import com.eladnava.sunriser.utils.SimpleNotify;
 import com.eladnava.sunriser.utils.SystemServices;
 
 public class CheckSystemAlarm extends BroadcastReceiver {
 
     // Check for modifications to alarm every CheckFrequencyHours hours
-    private static final int CheckFrequencyHours = 1;
+    private static final int CheckFrequencyHours = 6;
 
     public static void scheduleCheckSystemAlarm(Context context)
     {
@@ -36,7 +35,6 @@ public class CheckSystemAlarm extends BroadcastReceiver {
         // Schedule the CheckSystemAlarm service
         AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, nextAlarm , alarmFrequency, getPendingIntent(context));
-        //alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, nextAlarm , alarmFrequency, getCheckSystemAlarmPendingIntent(context));
 
         // Log the countdown
         Log.d(Logging.TAG, "CheckSystemAlarm service scheduled");
@@ -64,9 +62,6 @@ public class CheckSystemAlarm extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(Logging.TAG, "CheckSystemAlarm triggered");
-        SimpleNotify.notify("CheckSystemAlarm","Alarm Triggered", context);
-
         // App enabled?
         if (AppPreferences.isAppEnabled(context))
         {

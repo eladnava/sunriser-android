@@ -7,8 +7,10 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.eladnava.sunriser.scheduler.SunriseScheduler;
 import com.eladnava.sunriser.services.CheckSystemAlarm;
 import com.eladnava.sunriser.utils.AppPreferences;
+import com.eladnava.sunriser.utils.SimpleNotify;
 import com.eladnava.sunriser.utils.compatibility.AppCompatPreferenceActivity;
 import com.eladnava.sunriser.R;
 
@@ -79,6 +81,10 @@ public class Settings extends AppCompatPreferenceActivity implements SharedPrefe
                     // Disable CheckSystemAlarm task
                     CheckSystemAlarm.stopCheckSystemAlarm(this);
                 }
+            }
+            else if(key.equals("sunrise_headstart"))
+            {
+                SunriseScheduler.rescheduleSunriseAlarm(this, false);
             }
         }
 

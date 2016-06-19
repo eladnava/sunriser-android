@@ -11,7 +11,6 @@ import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.services.SunriseAlarm;
 import com.eladnava.sunriser.utils.AppPreferences;
-import com.eladnava.sunriser.utils.SimpleNotify;
 import com.eladnava.sunriser.utils.formatters.CountdownFormatter;
 import com.eladnava.sunriser.utils.SystemServices;
 
@@ -35,11 +34,12 @@ public class SunriseScheduler
         // No alarm scheduled?
         if ( nextAlarm == 0 )
         {
-            SimpleNotify.notify("SunriseScheduler", "No alarm set", context);
+            Log.d(Logging.TAG, "SunriseScheduler: No alarm set");
 
             // Nothing to schedule
             return;
         }
+
         // Alarm has changed, or no previous alarm set. Set a new sunrise alarm
 
         // Get current time (UTC)
@@ -52,7 +52,7 @@ public class SunriseScheduler
         // Allow alarms that should have triggered within the last 5 seconds, as we may be checking as the alarm is going off.
         if (startSunrise < (now-5000))
         {
-            SimpleNotify.notify("SunriseScheduler", "Sunrise already happened", context);
+            Log.d(Logging.TAG, "SunriseScheduler: Sunrise already happened");
             // Don't schedule a sunrise alarm in the past
             return;
         }
@@ -69,9 +69,6 @@ public class SunriseScheduler
             // Show a toast with countdown
             Toast.makeText(context, countdownMessage, Toast.LENGTH_LONG).show();
         }
-
-        SimpleNotify.notify("SunriseScheduler", countdownMessage, context);
-        //SimpleNotify.notify("SunriseScheduler Set:", "Was "+nextAlarmOld+" now "+nextAlarm, context);
 
         // Log the countdown
         Log.d(Logging.TAG, countdownMessage);
