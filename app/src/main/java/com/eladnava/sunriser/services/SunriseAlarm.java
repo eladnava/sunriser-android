@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.support.annotation.Nullable;
 
@@ -14,6 +16,8 @@ import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.integrations.MiLightIntegration;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
 import com.eladnava.sunriser.utils.AppPreferences;
+import com.eladnava.sunriser.utils.Networking;
+import com.eladnava.sunriser.utils.SimpleNotify;
 import com.eladnava.sunriser.utils.ThreadUtils;
 import com.eladnava.sunriser.utils.intents.IntentExtras;
 
@@ -33,62 +37,72 @@ public class SunriseAlarm extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        // App enabled?
-        if (AppPreferences.isAppEnabled(this))
+        // Verify Wi-Fi network connectivity before broadcasting
+        if (!Networking.isWiFiConnected(this))
         {
-            // Determine whether we are testing the alarm
-            boolean testMode = intent.getBooleanExtra(IntentExtras.SUNRISE_ALARM_TEST, false);
+            // Kill the service
+            stopSelf();
+            Log.d(Logging.TAG, "SunriseAlarm: Not connected to WiFi. Exiting");
+            return START_NOT_STICKY;
+        }
 
-            boolean doAlarm;
+        if (!AppPreferences.isAppEnabled(this))
+        {
+            // Kill the service
+            stopSelf();
+            Log.d(Logging.TAG, "SunriseAlarm: App not enabled");
+            return START_NOT_STICKY;
+        }
 
-            // Determine if we should be running the alarm right now.
-            doAlarm = false;
-            // Acquire next system alarm timestamp (in UTC)
-            long nextAlarm = SystemClock.getNextAlarmTriggerTimestamp(this);
+        // Determine whether we are testing the alarm
+        boolean testMode = intent.getBooleanExtra(IntentExtras.SUNRISE_ALARM_TEST, false);
 
-            // No alarm scheduled?
-            if ( nextAlarm != 0 )
+        boolean doAlarm;
+
+        // Determine if we should be running the alarm right now.
+        doAlarm = false;
+        // Acquire next system alarm timestamp (in UTC)
+        long nextAlarm = SystemClock.getNextAlarmTriggerTimestamp(this);
+
+        // No alarm scheduled?
+        if ( nextAlarm != 0 )
+        {
+            // Get current time (UTC)
+            long now = System.currentTimeMillis();
+
+            // Calculate when the sunrise alarm should commence (prior to the scheduled system alarm)
+            long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(this) * 60 * 1000);
+
+            // Check if the sunrise should start now - within 1 minute of current time
+            if (Math.abs(startSunrise - now) < 60*1000)
             {
-                // Get current time (UTC)
-                long now = System.currentTimeMillis();
-
-                // Calculate when the sunrise alarm should commence (prior to the scheduled system alarm)
-                long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(this) * 60 * 1000);
-
-                // Check if the sunrise should start now - within 1 minute of current time
-                if (Math.abs(startSunrise - now) < 60*1000)
-                {
-                    // do the sunrise
-                    doAlarm = true;
-                }
-                else
-                {
-                    Log.d(Logging.TAG, "SunriseAlarm: Alarm should not happen now, aborting");
-                }
+                // do the sunrise
+                doAlarm = true;
             }
             else
             {
-                Log.d(Logging.TAG, "SunriseAlarm: No alarm set, aborting");
-            }
-
-
-            if(testMode || doAlarm)
-            {
-                // Run the sunrise alarm async (since we can't issue network calls on service's main thread)
-                mAlarmTask = new AsyncSunriseAlarm();
-
-                // Start it
-                mAlarmTask.execute(testMode);
-            }
-            else
-            {
-                // we missed the alarm, kill
-                stopSelf();
+                Log.d(Logging.TAG, "SunriseAlarm: Alarm should not happen now, aborting");
             }
         }
         else
         {
-            // Kill the service
+            Log.d(Logging.TAG, "SunriseAlarm: No alarm set, aborting");
+        }
+
+
+        if(testMode || doAlarm)
+        {
+            SimpleNotify.notify(SunriseAlarm.this, "SunriseAlarm","onStartCommand::starting"); // Y
+
+            // Run the sunrise alarm async (since we can't issue network calls on service's main thread)
+            mAlarmTask = new AsyncSunriseAlarm();
+
+            // Start it
+            mAlarmTask.execute(testMode);
+        }
+        else
+        {
+            // we missed the alarm, kill
             stopSelf();
         }
 
@@ -98,8 +112,12 @@ public class SunriseAlarm extends Service
 
     private void sendSunriseAlarmCommands(boolean isTesting, Context context) throws Exception
     {
-        // Delay - prevent overlap of threads
         ThreadUtils.sleepExact(1000);
+
+        // Get a partial wake lock to ensure timing works correctly
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SunriseAlarm");
+        wakeLock.acquire();
 
         // Get desired zone from app settings
         int zone = AppPreferences.getMiLightZone(context);
@@ -145,6 +163,9 @@ public class SunriseAlarm extends Service
             ThreadUtils.sleepExact(brightnessSleepInterval);
         }
 
+        wakeLock.release();
+
+
         // Did the user enable "Daylight Forever"?
         if (AppPreferences.isDaylightForeverEnabled(context))
         {
@@ -161,9 +182,23 @@ public class SunriseAlarm extends Service
 
             // Turn off the bulb since we should have woken up by now
             MiLightIntegration.fadeOutLightByZone(zone, this);
+
         }
 
+        // Wait to prevent killing alarm from cutting off fadeout
+        ThreadUtils.sleepExact(5000);
     }
+
+    /*
+    public boolean isRunning()
+    {
+        if(mAlarmTask == null)
+            return false;
+        if(mAlarmTask.getStatus() == AsyncTask.Status.PENDING || mAlarmTask.getStatus() == AsyncTask.Status.RUNNING)
+            return true;
+        return false;
+    }
+    */
 
     public class AsyncSunriseAlarm extends AsyncTask<Boolean, String, Integer>
     {
@@ -206,6 +241,7 @@ public class SunriseAlarm extends Service
         {
             // Cancel (and interrupt any threads that are currently sleeping)
             mAlarmTask.cancel(true);
+
         }
 
         // For API<21: Schedule CheckSystemAlarm

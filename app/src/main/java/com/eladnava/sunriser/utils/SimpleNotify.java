@@ -6,22 +6,26 @@ import android.support.v7.app.NotificationCompat;
 
 import com.eladnava.sunriser.R;
 
+import java.util.Random;
+
 public class SimpleNotify
 {
 
-    private static int notificationCounter = 0;
-    public static void notify(String title, String text, Context context)
+    public static void notify( Context context, String title, String text)
     {
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        //mBuilder.setSmallIcon(R.drawable.notification_icon);
-        mBuilder.setSmallIcon(R.drawable.ic_logo);
-        mBuilder.setContentTitle(title);
-        mBuilder.setContentText(text);
-
-        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        // notificationID allows you to update the notification later on.
-        mNotificationManager.notify(notificationCounter, mBuilder.build());
-        notificationCounter++;
+        notify(context, title, text, new Random().nextInt());
     }
 
+    public static void notify( Context context, String title, String text, int notificationID)
+    {
+        if(false) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
+            mBuilder.setSmallIcon(R.drawable.ic_logo);
+            mBuilder.setContentTitle(title);
+            mBuilder.setContentText(text);
+
+            NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(notificationID, mBuilder.build());
+        }
+    }
 }

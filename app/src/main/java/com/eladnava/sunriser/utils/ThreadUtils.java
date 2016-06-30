@@ -2,6 +2,12 @@ package com.eladnava.sunriser.utils;
 
 public class ThreadUtils
 {
+    public static void sleepExact(int millis) throws Exception {
+
+        Thread.sleep(millis);
+    }
+
+    /*
     public static void sleepExact(int millis) throws Exception
     {
         // Get current system time in milliseconds
@@ -24,4 +30,5 @@ public class ThreadUtils
             now = System.currentTimeMillis();
         }
     }
+    */
 }
