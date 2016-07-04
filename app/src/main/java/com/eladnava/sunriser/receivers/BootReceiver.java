@@ -8,14 +8,11 @@ import android.util.Log;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
 
-public class BootReceiver extends BroadcastReceiver
-{
+public class BootReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
+    public void onReceive(Context context, Intent intent) {
         // Make sure the right intent was provided
-        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED))
-        {
+        if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             // Log the event
             Log.d(Logging.TAG, "Boot completed");
 

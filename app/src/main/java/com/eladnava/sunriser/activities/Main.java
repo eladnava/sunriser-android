@@ -15,22 +15,20 @@ import android.widget.ImageView;
 import com.eladnava.sunriser.R;
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
+import com.eladnava.sunriser.integrations.MiLightIntegration;
+import com.eladnava.sunriser.scheduler.SunriseScheduler;
 import com.eladnava.sunriser.services.SunriseAlarm;
+import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.Networking;
 import com.eladnava.sunriser.utils.ThreadUtils;
 import com.eladnava.sunriser.utils.intents.IntentExtras;
-import com.eladnava.sunriser.integrations.MiLightIntegration;
-import com.eladnava.sunriser.scheduler.SunriseScheduler;
-import com.eladnava.sunriser.utils.AppPreferences;
 
-public class Main extends AppCompatActivity
-{
+public class Main extends AppCompatActivity {
     ImageView mIcon;
     Thread mMoonlightThread;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set up activity UI
@@ -38,8 +36,7 @@ public class Main extends AppCompatActivity
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
 
         // Force Wi-Fi connection to use the app
@@ -52,8 +49,7 @@ public class Main extends AppCompatActivity
         SunriseScheduler.rescheduleSunriseAlarm(this, true);
     }
 
-    void initializeUI()
-    {
+    void initializeUI() {
         // Inflate main activity layout
         setContentView(R.layout.activity_main);
 
@@ -67,19 +63,16 @@ public class Main extends AppCompatActivity
         mIcon = (ImageView) findViewById(R.id.icon);
 
         // Handle clicks on image
-        mIcon.setOnClickListener(new View.OnClickListener()
-        {
+        mIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 // Reschedule sunrise alarm (and display a toast)
                 SunriseScheduler.rescheduleSunriseAlarm(Main.this, true);
             }
         });
     }
 
-    private void testSunriseAlarm()
-    {
+    private void testSunriseAlarm() {
         // Prepare sunrise alarm service intent
         Intent testSunrise = new Intent(Main.this, SunriseAlarm.class);
 
@@ -90,24 +83,19 @@ public class Main extends AppCompatActivity
         startService(testSunrise);
     }
 
-    private void requireWiFiConnectivity()
-    {
+    private void requireWiFiConnectivity() {
         // No Wi-Fi connection?
-        if (!Networking.isWiFiConnected(this))
-        {
+        if (!Networking.isWiFiConnected(this)) {
             // Show error dialog
             new AlertDialog.Builder(this)
                     .setTitle(R.string.connect_wifi)
                     .setMessage(R.string.connect_wifi_desc)
                     .setPositiveButton(R.string.ok, null)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener()
-                    {
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
+                        public void onDismiss(DialogInterface dialog) {
                             // Still no Wi-Fi connection?
-                            if (!Networking.isWiFiConnected(Main.this))
-                            {
+                            if (!Networking.isWiFiConnected(Main.this)) {
                                 // Goodbye
                                 finish();
                             }
@@ -117,21 +105,17 @@ public class Main extends AppCompatActivity
         }
     }
 
-    private void requireScheduledSystemAlarm()
-    {
+    private void requireScheduledSystemAlarm() {
         // No scheduled alarm?
-        if (SystemClock.getNextAlarmTriggerTimestamp(this) == 0)
-        {
+        if (SystemClock.getNextAlarmTriggerTimestamp(this) == 0) {
             // Show error dialog
             new AlertDialog.Builder(this)
                     .setTitle(R.string.no_alarms)
                     .setMessage(R.string.no_alarms_desc)
                     .setPositiveButton(R.string.ok, null)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener()
-                    {
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
-                        public void onDismiss(DialogInterface dialog)
-                        {
+                        public void onDismiss(DialogInterface dialog) {
                             // Goodbye
                             finish();
                         }
@@ -140,25 +124,20 @@ public class Main extends AppCompatActivity
         }
     }
 
-    private void viewSettings()
-    {
+    private void viewSettings() {
         // Start the settings activity
         startActivity(new Intent(Main.this, Settings.class));
     }
 
-    private void enableMoonlightMode()
-    {
+    private void enableMoonlightMode() {
         // Kill the sunrise alarm service (in case it's running)
         stopService(new Intent(this, SunriseAlarm.class));
 
         // Execute the light commands in a new thread
-        mMoonlightThread = new Thread(new Runnable()
-        {
+        mMoonlightThread = new Thread(new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     // Get selected zone in settings
                     int zone = AppPreferences.getMiLightZone(Main.this);
 
@@ -182,9 +161,7 @@ public class Main extends AppCompatActivity
 
                     // Turn off the bulb after moonlight mode ends
                     MiLightIntegration.fadeOutLightByZone(zone, Main.this);
-                }
-                catch (Exception exc)
-                {
+                } catch (Exception exc) {
                     // Log errors to logcat
                     Log.e(Logging.TAG, "Moonlight error", exc);
                 }
@@ -195,34 +172,27 @@ public class Main extends AppCompatActivity
         mMoonlightThread.start();
     }
 
-    private void killLight()
-    {
+    private void killLight() {
         // Kill the sunrise alarm service (in case it's running)
         stopService(new Intent(this, SunriseAlarm.class));
 
         // Moonlight mode is active?
-        if (mMoonlightThread != null && mMoonlightThread.isAlive() && !mMoonlightThread.isInterrupted())
-        {
+        if (mMoonlightThread != null && mMoonlightThread.isAlive() && !mMoonlightThread.isInterrupted()) {
             // Interrupt the thread and end it
             mMoonlightThread.interrupt();
         }
 
         // Actually turn off the light (by zone)
-        new Thread(new Runnable()
-        {
+        new Thread(new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     // Get selected zone in settings
                     int zone = AppPreferences.getMiLightZone(Main.this);
 
                     // Turn off the light for the selected zone
                     MiLightIntegration.fadeOutLightByZone(zone, Main.this);
-                }
-                catch (Exception exc)
-                {
+                } catch (Exception exc) {
                     // Log errors to logcat
                     Log.e(Logging.TAG, "Kill error", exc);
                 }
@@ -231,19 +201,16 @@ public class Main extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu - this adds items to the action bar if it is present
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks by ID
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             // Test
             case R.id.action_test:
                 testSunriseAlarm();

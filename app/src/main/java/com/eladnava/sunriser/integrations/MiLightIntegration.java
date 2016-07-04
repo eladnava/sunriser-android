@@ -13,19 +13,17 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class MiLightIntegration
-{
+public class MiLightIntegration {
     // Amount of time it takes for the zone selection to register (in millis)
     public static final int SELECT_ZONE_DELAY_MS = 200;
 
     // Amount of time it takes for the bulb to fade out (in millis)
-    public static final int FADE_OUT_DURATION_MS= 1000;
+    public static final int FADE_OUT_DURATION_MS = 1000;
 
     // Amount of time it takes for the bulb to whiten (in millis)
-    public static final int WHITEN_DURATION_MS= 1000;
+    public static final int WHITEN_DURATION_MS = 1000;
 
-    public static void turnOnAndSelectZone(int zone, Context context) throws Exception
-    {
+    public static void turnOnAndSelectZone(int zone, Context context) throws Exception {
         // Zone validation
         validateZone(zone);
 
@@ -39,17 +37,14 @@ public class MiLightIntegration
         ThreadUtils.sleepExact(SELECT_ZONE_DELAY_MS);
     }
 
-    private static void validateZone(int zone) throws Exception
-    {
+    private static void validateZone(int zone) throws Exception {
         // Sanitize zone (can only range from 0 to 4, inclusive)
-        if (zone < 0 || zone > 4)
-        {
+        if (zone < 0 || zone > 4) {
             throw new Exception("The provided zone must range from 0 to 4, inclusive.");
         }
     }
 
-    public static void killLightByZone(int zone, Context context) throws Exception
-    {
+    public static void killLightByZone(int zone, Context context) throws Exception {
         // Zone validation
         validateZone(zone);
 
@@ -63,8 +58,7 @@ public class MiLightIntegration
         Log.d(Logging.TAG, "Killed light zone " + zone);
     }
 
-    public static void fadeOutLightByZone(int zone, Context context) throws Exception
-    {
+    public static void fadeOutLightByZone(int zone, Context context) throws Exception {
         // Modify bulb brightness level to lowest percent value for next time
         MiLightIntegration.setBrightnessByZone(1, zone, context);
 
@@ -75,8 +69,7 @@ public class MiLightIntegration
         MiLightIntegration.killLightByZone(zone, context);
     }
 
-    public static void setWhiteModeByZone(int zone, Context context) throws Exception
-    {
+    public static void setWhiteModeByZone(int zone, Context context) throws Exception {
         // Zone validation
         validateZone(zone);
 
@@ -93,14 +86,12 @@ public class MiLightIntegration
         Log.d(Logging.TAG, "Set white mode for zone " + zone);
     }
 
-    public static void setBrightnessByZone(int percent, int zone, Context context) throws Exception
-    {
+    public static void setBrightnessByZone(int percent, int zone, Context context) throws Exception {
         // Validate zone + send zone selection command (and wait a bit for it to register) before sending the brightness command
         turnOnAndSelectZone(zone, context);
 
         // Sanitize brightness level input
-        if (percent < 0 || percent > 100)
-        {
+        if (percent < 0 || percent > 100) {
             throw new Exception("Please specify a brightness percentage from 0 to 100.");
         }
 
@@ -120,11 +111,9 @@ public class MiLightIntegration
         Log.d(Logging.TAG, "Set brightness to " + percent + "% for zone " + zone);
     }
 
-    private static void broadcastCommand(byte[] buffer, Context context) throws Exception
-    {
+    private static void broadcastCommand(byte[] buffer, Context context) throws Exception {
         // Verify Wi-Fi network connectivity before broadcasting
-        if (!Networking.isWiFiConnected(context))
-        {
+        if (!Networking.isWiFiConnected(context)) {
             return;
         }
 

@@ -1,9 +1,7 @@
 package com.eladnava.sunriser.utils;
 
-public class ThreadUtils
-{
-    public static void sleepExact(int millis) throws Exception
-    {
+public class ThreadUtils {
+    public static void sleepExact(int millis) throws Exception {
         // Get current system time in milliseconds
         long now = System.currentTimeMillis();
 
@@ -11,11 +9,9 @@ public class ThreadUtils
         long end = now + millis;
 
         // Wait for the desired time to pass
-        while(now < end)
-        {
+        while (now < end) {
             // Handle interrupts
-            if (Thread.currentThread().isInterrupted())
-            {
+            if (Thread.currentThread().isInterrupted()) {
                 // Stop execution
                 throw new InterruptedException();
             }

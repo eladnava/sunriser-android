@@ -5,10 +5,8 @@ import android.content.Context;
 
 import com.eladnava.sunriser.utils.SystemServices;
 
-public class SystemClock
-{
-    public static long getNextAlarmTriggerTimestamp(Context context)
-    {
+public class SystemClock {
+    public static long getNextAlarmTriggerTimestamp(Context context) {
         // Acquire an instance of the system-wide alarm manager
         AlarmManager alarmManager = SystemServices.getAlarmManager(context);
 
@@ -16,8 +14,7 @@ public class SystemClock
         AlarmManager.AlarmClockInfo nextAlarm = alarmManager.getNextAlarmClock();
 
         // No scheduled alarm?
-        if ( nextAlarm == null )
-        {
+        if (nextAlarm == null) {
             return 0;
         }
 

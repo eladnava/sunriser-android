@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.util.Log;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.integrations.MiLightIntegration;
@@ -14,13 +14,11 @@ import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.ThreadUtils;
 import com.eladnava.sunriser.utils.intents.IntentExtras;
 
-public class SunriseAlarm extends Service
-{
+public class SunriseAlarm extends Service {
     private AsyncSunriseAlarm mAlarmTask;
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
 
         // Log the event
@@ -28,11 +26,9 @@ public class SunriseAlarm extends Service
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         // App enabled?
-        if (AppPreferences.isAppEnabled(this))
-        {
+        if (AppPreferences.isAppEnabled(this)) {
             // Determine whether we are testing the alarm
             boolean testMode = intent.getBooleanExtra(IntentExtras.SUNRISE_ALARM_TEST, false);
 
@@ -41,9 +37,7 @@ public class SunriseAlarm extends Service
 
             // Start it
             mAlarmTask.execute(testMode);
-        }
-        else
-        {
+        } else {
             // Kill the service
             stopSelf();
         }
@@ -52,8 +46,7 @@ public class SunriseAlarm extends Service
         return START_NOT_STICKY;
     }
 
-    private void sendSunriseAlarmCommands(boolean isTesting, Context context) throws Exception
-    {
+    private void sendSunriseAlarmCommands(boolean isTesting, Context context) throws Exception {
         // Get desired zone from app settings
         int zone = AppPreferences.getMiLightZone(context);
 
@@ -64,8 +57,7 @@ public class SunriseAlarm extends Service
         int daylightDuration = (AppPreferences.getDaylightDurationMinutes(context) * 60 * 1000);
 
         // Override values if testing (to emit a fast sunrise)
-        if (isTesting)
-        {
+        if (isTesting) {
             // No sleep in between brightness levels
             brightnessSleepInterval = 0;
 
@@ -89,8 +81,7 @@ public class SunriseAlarm extends Service
         Log.d(Logging.TAG, "Starting sunrise, delaying increments by " + brightnessSleepInterval + "ms");
 
         // Start incrementing the bulb's brightness
-        for (int percent = 0; percent <= 100; percent++)
-        {
+        for (int percent = 0; percent <= 100; percent++) {
             // Modify bulb brightness level to current percent value
             MiLightIntegration.setBrightnessByZone(percent, zone, this);
 
@@ -99,13 +90,10 @@ public class SunriseAlarm extends Service
         }
 
         // Did the user enable "Daylight Forever"?
-        if (AppPreferences.isDaylightForeverEnabled(context))
-        {
+        if (AppPreferences.isDaylightForeverEnabled(context)) {
             // Write to log
             Log.d(Logging.TAG, "Entering daylight mode forever");
-        }
-        else
-        {
+        } else {
             // Write to log
             Log.d(Logging.TAG, "Entering daylight mode for " + daylightDuration + "ms");
 
@@ -117,43 +105,13 @@ public class SunriseAlarm extends Service
         }
     }
 
-    public class AsyncSunriseAlarm extends AsyncTask<Boolean, String, Integer>
-    {
-        @Override
-        protected Integer doInBackground(Boolean... testing)
-        {
-            try
-            {
-                // Run the main scheduling code (may be interrupted by AsyncTask.cancel())
-                sendSunriseAlarmCommands(testing[0], SunriseAlarm.this);
-            }
-            catch (Exception exc)
-            {
-                // Log errors to logcat
-                Log.e(Logging.TAG, "SunriseAlarm error", exc);
-            }
-
-            // Gotta return something
-            return 0;
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer)
-        {
-            // All done with service, stop it now
-            stopSelf();
-        }
-    }
-
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         // Write to log
         Log.d(Logging.TAG, "SunriseAlarm destroyed");
 
         // Currently running the sunrise alarm AsyncTask?
-        if (mAlarmTask != null)
-        {
+        if (mAlarmTask != null) {
             // Cancel (and interrupt any threads that are currently sleeping)
             mAlarmTask.cancel(true);
         }
@@ -164,9 +122,30 @@ public class SunriseAlarm extends Service
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent)
-    {
+    public IBinder onBind(Intent intent) {
         // Don't allow binding to this service
         return null;
+    }
+
+    public class AsyncSunriseAlarm extends AsyncTask<Boolean, String, Integer> {
+        @Override
+        protected Integer doInBackground(Boolean... testing) {
+            try {
+                // Run the main scheduling code (may be interrupted by AsyncTask.cancel())
+                sendSunriseAlarmCommands(testing[0], SunriseAlarm.this);
+            } catch (Exception exc) {
+                // Log errors to logcat
+                Log.e(Logging.TAG, "SunriseAlarm error", exc);
+            }
+
+            // Gotta return something
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            // All done with service, stop it now
+            stopSelf();
+        }
     }
 }

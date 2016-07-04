@@ -1,81 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/action_settings">
-    <PreferenceCategory
-        android:title="@string/sunriser">
+    <PreferenceCategory android:title="@string/sunriser">
         <CheckBoxPreference
+            android:defaultValue="@string/enable_pref_default"
             android:key="@string/enable_pref"
-            android:title="@string/enable"
             android:summary="@string/enable_desc"
-            android:defaultValue="@string/enable_pref_default"/>
+            android:title="@string/enable" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/sunrise">
+    <PreferenceCategory android:title="@string/sunrise">
         <EditTextPreference
-            android:key="@string/sunrise_headstart_pref"
-            android:title="@string/sunrise_headstart"
-            android:inputType="number"
-            android:summary="@string/sunrise_headstart_desc"
             android:defaultValue="@string/sunrise_headstart_default"
-            android:dependency="@string/enable_pref"/>
-        <EditTextPreference
-            android:key="@string/sunrise_duration_pref"
-            android:title="@string/sunrise_duration"
+            android:dependency="@string/enable_pref"
             android:inputType="number"
-            android:summary="@string/sunrise_duration_desc"
+            android:key="@string/sunrise_headstart_pref"
+            android:summary="@string/sunrise_headstart_desc"
+            android:title="@string/sunrise_headstart" />
+        <EditTextPreference
             android:defaultValue="@string/sunrise_duration_default"
-            android:dependency="@string/enable_pref"/>
+            android:dependency="@string/enable_pref"
+            android:inputType="number"
+            android:key="@string/sunrise_duration_pref"
+            android:summary="@string/sunrise_duration_desc"
+            android:title="@string/sunrise_duration" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/daylight">
+    <PreferenceCategory android:title="@string/daylight">
         <CheckBoxPreference
-            android:key="@string/daylight_forever_pref"
-            android:title="@string/daylight_forever"
-            android:inputType="number"
-            android:summary="@string/daylight_forever_desc"
             android:defaultValue="@string/daylight_forever_default"
+            android:dependency="@string/enable_pref"
             android:disableDependentsState="true"
-            android:dependency="@string/enable_pref"/>
-        <EditTextPreference
-            android:key="@string/daylight_duration_pref"
-            android:title="@string/daylight_duration"
             android:inputType="number"
-            android:summary="@string/daylight_duration_desc"
+            android:key="@string/daylight_forever_pref"
+            android:summary="@string/daylight_forever_desc"
+            android:title="@string/daylight_forever" />
+        <EditTextPreference
             android:defaultValue="@string/daylight_duration_default"
-            android:dependency="@string/daylight_forever_pref"/>
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/moonlight">
-        <EditTextPreference
-            android:key="@string/moonlight_duration_pref"
-            android:title="@string/moonlight_duration"
+            android:dependency="@string/daylight_forever_pref"
             android:inputType="number"
-            android:summary="@string/moonlight_duration_desc"
-            android:defaultValue="@string/moonlight_duration_default"/>
+            android:key="@string/daylight_duration_pref"
+            android:summary="@string/daylight_duration_desc"
+            android:title="@string/daylight_duration" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/milight">
+    <PreferenceCategory android:title="@string/moonlight">
+        <EditTextPreference
+            android:defaultValue="@string/moonlight_duration_default"
+            android:inputType="number"
+            android:key="@string/moonlight_duration_pref"
+            android:summary="@string/moonlight_duration_desc"
+            android:title="@string/moonlight_duration" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/milight">
         <ListPreference
-            android:key="@string/zone_pref"
-            android:title="@string/zone"
-            android:summary="@string/zone_desc"
             android:defaultValue="@string/zone_default"
             android:dependency="@string/enable_pref"
             android:entries="@array/zone_titles"
-            android:entryValues="@array/zone_values"/>
+            android:entryValues="@array/zone_values"
+            android:key="@string/zone_pref"
+            android:summary="@string/zone_desc"
+            android:title="@string/zone" />
         <EditTextPreference
-            android:key="@string/host_pref"
-            android:title="@string/host"
-            android:summary="@string/host_desc"
             android:defaultValue="@string/host_default"
-            android:dependency="@string/enable_pref"/>
+            android:dependency="@string/enable_pref"
+            android:key="@string/host_pref"
+            android:summary="@string/host_desc"
+            android:title="@string/host" />
         <EditTextPreference
-            android:key="@string/port_pref"
-            android:title="@string/port"
-            android:inputType="number"
-            android:summary="@string/port_desc"
             android:defaultValue="@string/port_default"
-            android:dependency="@string/enable_pref"/>
+            android:dependency="@string/enable_pref"
+            android:inputType="number"
+            android:key="@string/port_pref"
+            android:summary="@string/port_desc"
+            android:title="@string/port" />
     </PreferenceCategory>
 </PreferenceScreen>

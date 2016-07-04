@@ -11,19 +11,16 @@ import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.services.SunriseAlarm;
 import com.eladnava.sunriser.utils.AppPreferences;
-import com.eladnava.sunriser.utils.formatters.CountdownFormatter;
 import com.eladnava.sunriser.utils.SystemServices;
+import com.eladnava.sunriser.utils.formatters.CountdownFormatter;
 
-public class SunriseScheduler
-{
-    public static void rescheduleSunriseAlarm(Context context, boolean showToast)
-    {
+public class SunriseScheduler {
+    public static void rescheduleSunriseAlarm(Context context, boolean showToast) {
         // Clear all previously-scheduled sunrise alarms
         SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
 
         // App disabled?
-        if (!AppPreferences.isAppEnabled(context))
-        {
+        if (!AppPreferences.isAppEnabled(context)) {
             // Don't reschedule any alarms
             return;
         }
@@ -35,8 +32,7 @@ public class SunriseScheduler
         long nextAlarm = SystemClock.getNextAlarmTriggerTimestamp(context);
 
         // No alarm scheduled?
-        if ( nextAlarm == 0 )
-        {
+        if (nextAlarm == 0) {
             // Nothing to schedule, then
             return;
         }
@@ -45,8 +41,7 @@ public class SunriseScheduler
         long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(context) * 60 * 1000);
 
         // Sunrise should have started already? (If next alarm is scheduled within the headstart time)
-        if (startSunrise < now)
-        {
+        if (startSunrise < now) {
             // Don't schedule a sunrise alarm in the past
             return;
         }
@@ -58,8 +53,7 @@ public class SunriseScheduler
         String countdownMessage = CountdownFormatter.getAlarmCountdownText(startSunrise, context);
 
         // Alert the user (if invoked when the app is visible)
-        if (showToast)
-        {
+        if (showToast) {
             // Show a toast with countdown
             Toast.makeText(context, countdownMessage, Toast.LENGTH_LONG).show();
         }
@@ -68,8 +62,7 @@ public class SunriseScheduler
         Log.d(Logging.TAG, countdownMessage);
     }
 
-    private static PendingIntent getSunriseAlarmPendingIntent(Context context)
-    {
+    private static PendingIntent getSunriseAlarmPendingIntent(Context context) {
         // Set the intent to start our sunrise alarm service
         Intent intent = new Intent(context, SunriseAlarm.class);
 
