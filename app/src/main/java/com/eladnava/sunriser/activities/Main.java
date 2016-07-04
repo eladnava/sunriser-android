@@ -17,6 +17,7 @@ import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.integrations.MiLightIntegration;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
+import com.eladnava.sunriser.services.MoonlightService;
 import com.eladnava.sunriser.services.SunriseAlarm;
 import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.Networking;
@@ -25,7 +26,6 @@ import com.eladnava.sunriser.utils.intents.IntentExtras;
 
 public class Main extends AppCompatActivity {
     ImageView mIcon;
-    Thread mMoonlightThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,12 @@ public class Main extends AppCompatActivity {
     }
 
     private void testSunriseAlarm() {
+        // Kill the sunrise alarm service (in case it's running)
+        stopService(new Intent(this, SunriseAlarm.class));
+
+        // Kill the moonlight service (in case it's running)
+        stopService(new Intent(this, MoonlightService.class));
+
         // Prepare sunrise alarm service intent
         Intent testSunrise = new Intent(Main.this, SunriseAlarm.class);
 
@@ -133,54 +139,19 @@ public class Main extends AppCompatActivity {
         // Kill the sunrise alarm service (in case it's running)
         stopService(new Intent(this, SunriseAlarm.class));
 
-        // Execute the light commands in a new thread
-        mMoonlightThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Get selected zone in settings
-                    int zone = AppPreferences.getMiLightZone(Main.this);
+        // Kill the previous moonlight service (in case it's running)
+        stopService(new Intent(this, MoonlightService.class));
 
-                    // Get the amount of milliseconds to sleep after the sunrise alarm reaches 100%
-                    int moonlightDuration = (AppPreferences.getMoonlightDurationMinutes(Main.this) * 60 * 1000);
-
-                    // Turn on white light for the specified zone (in case the mode was set to RGB)
-                    MiLightIntegration.setWhiteModeByZone(zone, Main.this);
-
-                    // First, set brightness level to 30% (should be enough for a night light) -- think about making this configurable via settings
-                    MiLightIntegration.setBrightnessByZone(30, zone, Main.this);
-
-                    // Wait X amount of seconds before sending the white mode command
-                    ThreadUtils.sleepExact(MiLightIntegration.FADE_OUT_DURATION_MS);
-
-                    // Write to log
-                    Log.d(Logging.TAG, "Entering moonlight mode for " + moonlightDuration + "ms");
-
-                    // Wait X amount of milliseconds before turning the bulb off
-                    ThreadUtils.sleepExact(moonlightDuration);
-
-                    // Turn off the bulb after moonlight mode ends
-                    MiLightIntegration.fadeOutLightByZone(zone, Main.this);
-                } catch (Exception exc) {
-                    // Log errors to logcat
-                    Log.e(Logging.TAG, "Moonlight error", exc);
-                }
-            }
-        });
-
-        // Start it
-        mMoonlightThread.start();
+        // (Re)start the moonlight service
+        startService(new Intent(this, MoonlightService.class));
     }
 
     private void killLight() {
         // Kill the sunrise alarm service (in case it's running)
         stopService(new Intent(this, SunriseAlarm.class));
 
-        // Moonlight mode is active?
-        if (mMoonlightThread != null && mMoonlightThread.isAlive() && !mMoonlightThread.isInterrupted()) {
-            // Interrupt the thread and end it
-            mMoonlightThread.interrupt();
-        }
+        // Kill the moonlight service (in case it's running)
+        stopService(new Intent(this, MoonlightService.class));
 
         // Actually turn off the light (by zone)
         new Thread(new Runnable() {

@@ -37,6 +37,7 @@
 
         <!-- Sunrise Alarm Service -->
         <service android:name=".services.SunriseAlarm" />
+        <service android:name=".services.MoonlightService" />
 
         <!-- Boot Completed Receiver -->
         <receiver android:name=".receivers.BootReceiver">
