@@ -40,7 +40,7 @@ public class SunriseScheduler {
         // Calculate when the sunrise alarm should commence (prior to the scheduled system alarm)
         long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(context) * 60 * 1000);
 
-        // Sunrise should have started already? (If next alarm is scheduled within the headstart time)
+        // Sunrise should have started already? (If next alarm is scheduled within the head-start time)
         if (startSunrise < now) {
             // Don't schedule a sunrise alarm in the past
             return;
