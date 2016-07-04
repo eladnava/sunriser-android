@@ -2,6 +2,7 @@ package com.eladnava.sunriser.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import com.eladnava.sunriser.R;
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
+import com.eladnava.sunriser.services.CheckSystemAlarm;
 import com.eladnava.sunriser.services.SunriseAlarm;
 import com.eladnava.sunriser.utils.Networking;
 import com.eladnava.sunriser.utils.ThreadUtils;
@@ -35,7 +37,21 @@ public class Main extends AppCompatActivity
 
         // Set up activity UI
         initializeUI();
+
+        // For API<21: Schedule CheckSystemAlarm
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            CheckSystemAlarm.scheduleCheckSystemAlarm(this);
+        }
+
     }
+
+    /*
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+    }
+    */
 
     @Override
     protected void onResume()
@@ -43,14 +59,28 @@ public class Main extends AppCompatActivity
         super.onResume();
 
         // Force Wi-Fi connection to use the app
-        requireWiFiConnectivity();
+        //requireWiFiConnectivity();
 
         // Check for a scheduled system alarm
         requireScheduledSystemAlarm();
 
         // Schedule sunrise alarm based on system alarm clock (cancel any previously-scheduled sunrise alarms as well)
         SunriseScheduler.rescheduleSunriseAlarm(this, true);
+
     }
+
+    @Override
+    protected void  onDestroy()
+    {
+        if(isFinishing()) {
+            // kill all alarms
+            CheckSystemAlarm.stopCheckSystemAlarm(this);
+        }
+
+        super.onDestroy();
+    }
+
+
 
     void initializeUI()
     {

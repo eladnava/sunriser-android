@@ -65,14 +65,16 @@ public class MiLightIntegration
 
     public static void fadeOutLightByZone(int zone, Context context) throws Exception
     {
-        // Modify bulb brightness level to lowest percent value for next time
-        MiLightIntegration.setBrightnessByZone(1, zone, context);
-
-        // Wait X amount of seconds before turning off the light
-        ThreadUtils.sleepExact(FADE_OUT_DURATION_MS);
-
-        // Turn off the bulb since we should have woken up by now
-        MiLightIntegration.killLightByZone(zone, context);
+        for(int i=0; i<5; i++) {
+            // Modify bulb brightness level to lowest percent value for next time
+            MiLightIntegration.setBrightnessByZone(1, zone, context);
+            ThreadUtils.sleepExact(FADE_OUT_DURATION_MS);
+        }
+        for(int i=0; i<5; i++) {
+            // Turn off the bulb since we should have woken up by now
+            MiLightIntegration.killLightByZone(zone, context);
+            ThreadUtils.sleepExact(FADE_OUT_DURATION_MS);
+        }
     }
 
     public static void setWhiteModeByZone(int zone, Context context) throws Exception

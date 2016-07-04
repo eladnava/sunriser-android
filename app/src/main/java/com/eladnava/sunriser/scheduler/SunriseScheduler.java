@@ -28,25 +28,31 @@ public class SunriseScheduler
             return;
         }
 
-        // Get current time (UTC)
-        long now = System.currentTimeMillis();
-
         // Acquire next system alarm timestamp (in UTC)
         long nextAlarm = SystemClock.getNextAlarmTriggerTimestamp(context);
 
         // No alarm scheduled?
         if ( nextAlarm == 0 )
         {
-            // Nothing to schedule, then
+            Log.d(Logging.TAG, "SunriseScheduler: No alarm set");
+
+            // Nothing to schedule
             return;
         }
+
+        // Alarm has changed, or no previous alarm set. Set a new sunrise alarm
+
+        // Get current time (UTC)
+        long now = System.currentTimeMillis();
 
         // Calculate when the sunrise alarm should commence (prior to the scheduled system alarm)
         long startSunrise = nextAlarm - (AppPreferences.getSunriseHeadstartMinutes(context) * 60 * 1000);
 
         // Sunrise should have started already? (If next alarm is scheduled within the headstart time)
-        if (startSunrise < now)
+        // Allow alarms that should have triggered within the last 5 seconds, as we may be checking as the alarm is going off.
+        if (startSunrise < (now-5000))
         {
+            Log.d(Logging.TAG, "SunriseScheduler: Sunrise already happened");
             // Don't schedule a sunrise alarm in the past
             return;
         }
@@ -67,6 +73,7 @@ public class SunriseScheduler
         // Log the countdown
         Log.d(Logging.TAG, countdownMessage);
     }
+
 
     private static PendingIntent getSunriseAlarmPendingIntent(Context context)
     {
