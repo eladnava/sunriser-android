@@ -37,7 +37,8 @@ public class SunriseAlarm extends Service {
 
             // Start it
             mAlarmTask.execute(testMode);
-        } else {
+        }
+        else {
             // Kill the service
             stopSelf();
         }
@@ -93,7 +94,8 @@ public class SunriseAlarm extends Service {
         if (AppPreferences.isDaylightForeverEnabled(context)) {
             // Write to log
             Log.d(Logging.TAG, "Entering daylight mode forever");
-        } else {
+        }
+        else {
             // Write to log
             Log.d(Logging.TAG, "Entering daylight mode for " + daylightDuration + "ms");
 
