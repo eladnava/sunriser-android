@@ -17,6 +17,7 @@ Research shows that the healthiest way to wake up is along with the sun rising a
 
 ![Main](https://raw.github.com/eladnava/sunriser-android/master/preview/screenshot1.png) 
 ![Settings](https://raw.github.com/eladnava/sunriser-android/master/preview/screenshot2.png)
+![Time for Bed](https://raw.github.com/eladnava/sunriser-android/master/preview/screenshot3.png)
 
 # Requirements
 * Android SDK
