@@ -42,10 +42,23 @@ public class MoonlightService extends Service {
         // Get the amount of milliseconds to sleep after the sunrise alarm reaches 100%
         int moonlightDuration = (AppPreferences.getMoonlightDurationMinutes(context) * 60 * 1000);
 
-        // Turn on white light for the specified zone (in case the mode was set to RGB)
-        MiLightIntegration.setWhiteModeByZone(zone, context);
+        // Set brightness level to 0% and select the bulb (to avoid a 100% full blast if that was the bulb's previous state before it was turned off)
+        MiLightIntegration.setBrightnessByZone(0, zone, context);
 
-        // First, set brightness level to 30% (should be enough for a night light) -- think about making this configurable via settings
+        // Get moonlight color from preferences
+        int color = AppPreferences.getMoonlightColor(context);
+
+        // White mode?
+        if (color == -1) {
+            // Turn on white light for the specified zone (in case the mode was set to RGB)
+            MiLightIntegration.setWhiteModeByZone(zone, context);
+        }
+        else {
+            // Set custom color (it's a decimal that can be converted to byte)
+            MiLightIntegration.setColorByZone(zone, color, context);
+        }
+
+        // Set brightness level to 30% (should be enough for a night light) -- think about making this configurable via settings
         MiLightIntegration.setBrightnessByZone(30, zone, context);
 
         // Wait X amount of seconds before sending the white mode command

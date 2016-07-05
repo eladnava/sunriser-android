@@ -27,6 +27,12 @@
     <string name="enable_pref">enable</string>
     <string name="enable_pref_default">true</string>
 
+    <!-- Sunrise Color-->
+    <string name="sunrise_color">Sunrise Color</string>
+    <string name="sunrise_color_desc" formatted="false">The color of the bulb at sunrise</string>
+    <string name="sunrise_color_pref">sunrise_color</string>
+    <string name="sunrise_color_default">-1</string>
+
     <!-- Sunrise Duration -->
     <string name="sunrise_duration">Sunrise Duration</string>
     <string name="sunrise_duration_desc" formatted="false">The time it takes (in minutes) to transition from 0% to 100% brightness</string>
@@ -50,6 +56,12 @@
     <string name="daylight_duration_desc">Leave the light on for X minutes after sunrise ends</string>
     <string name="daylight_duration_pref">daylight_duration</string>
     <string name="daylight_duration_default">20</string>
+
+    <!-- Moonlight Color -->
+    <string name="moonlight_color">Moonlight Color</string>
+    <string name="moonlight_color_desc" formatted="false">The color of the bulb in moonlight mode</string>
+    <string name="moonlight_color_pref">moonlight_color</string>
+    <string name="moonlight_color_default">-1</string>
 
     <!-- Moonlight Duration -->
     <string name="moonlight_duration">Moonlight Duration</string>
@@ -102,5 +114,47 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
+    </string-array>
+
+    <!-- Color Selection Names -->
+    <string-array name="color_names">
+        <item>White (Default)</item>
+        <item>Violet</item>
+        <item>Royal Blue</item>
+        <item>Baby Blue</item>
+        <item>Aqua</item>
+        <item>Mint</item>
+        <item>Seafoam Green</item>
+        <item>Green</item>
+        <item>Lime Green</item>
+        <item>Yellow</item>
+        <item>Yellow Orange</item>
+        <item>Orange</item>
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Fuchsia</item>
+        <item>Lilac</item>
+        <item>Lavender</item>
+    </string-array>
+
+    <!-- Color Selection Values -->
+    <string-array name="color_values">
+        <item>-1</item>
+        <item>0</item>
+        <item>16</item>
+        <item>32</item>
+        <item>48</item>
+        <item>64</item>
+        <item>80</item>
+        <item>96</item>
+        <item>112</item>
+        <item>128</item>
+        <item>144</item>
+        <item>160</item>
+        <item>176</item>
+        <item>192</item>
+        <item>208</item>
+        <item>224</item>
+        <item>240</item>
     </string-array>
 </resources>

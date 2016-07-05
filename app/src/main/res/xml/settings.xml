@@ -9,6 +9,14 @@
             android:title="@string/enable" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/sunrise">
+        <ListPreference
+            android:defaultValue="@string/sunrise_color_default"
+            android:dependency="@string/enable_pref"
+            android:entries="@array/color_names"
+            android:entryValues="@array/color_values"
+            android:key="@string/sunrise_color_pref"
+            android:summary="@string/sunrise_color_desc"
+            android:title="@string/sunrise_color" />
         <EditTextPreference
             android:defaultValue="@string/sunrise_headstart_default"
             android:dependency="@string/enable_pref"
@@ -42,6 +50,14 @@
             android:title="@string/daylight_duration" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/moonlight">
+        <ListPreference
+            android:defaultValue="@string/moonlight_color_default"
+            android:dependency="@string/enable_pref"
+            android:entries="@array/color_names"
+            android:entryValues="@array/color_values"
+            android:key="@string/moonlight_color_pref"
+            android:summary="@string/moonlight_color_desc"
+            android:title="@string/moonlight_color" />
         <EditTextPreference
             android:defaultValue="@string/moonlight_duration_default"
             android:inputType="number"

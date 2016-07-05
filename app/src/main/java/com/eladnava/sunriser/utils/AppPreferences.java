@@ -15,6 +15,16 @@ public class AppPreferences {
         return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.zone_pref), context.getString(R.string.zone_default)));
     }
 
+    public static int getSunriseColor(Context context) {
+        // Get color from SharedPreferences and convert to int
+        return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.sunrise_color_pref), context.getString(R.string.sunrise_color_default)));
+    }
+
+    public static int getMoonlightColor(Context context) {
+        // Get color from SharedPreferences and convert to int
+        return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.moonlight_color_pref), context.getString(R.string.moonlight_color_default)));
+    }
+
     public static boolean isDaylightForeverEnabled(Context context) {
         // Return enabled/disabled flag from SharedPreferences (defaults to true)
         return SystemServices.getSharedPreferences(context).getBoolean(context.getString(R.string.daylight_forever_pref), context.getString(R.string.daylight_forever_default) == "true");

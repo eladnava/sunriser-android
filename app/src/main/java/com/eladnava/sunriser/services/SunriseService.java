@@ -98,14 +98,24 @@ public class SunriseService extends Service {
                 // Make sure update interval is at least 50ms for timer interval to work correctly
                 brightnessUpdateInterval = (brightnessUpdateInterval < 50) ? 50 : brightnessUpdateInterval;
 
-                // First, set brightness level to 0% (to avoid a 100% full blast if that was the bulb's previous state before it was turned off)
+                // Set brightness level to 0% and select the bulb (to avoid a 100% full blast if that was the bulb's previous state before it was turned off)
                 MiLightIntegration.setBrightnessByZone(0, zone, SunriseService.this);
 
                 // Wait X amount of seconds before sending the white mode command
                 Thread.sleep(MiLightIntegration.FADE_OUT_DURATION_MS);
 
-                // Turn on white light for the specified zone (in case the mode was set to RGB)
-                MiLightIntegration.setWhiteModeByZone(zone, SunriseService.this);
+                // Get sunrise color from preferences
+                int color = AppPreferences.getSunriseColor(SunriseService.this);
+
+                // White mode?
+                if (color == -1) {
+                    // Turn on white light for the specified zone (in case the mode was set to RGB)
+                    MiLightIntegration.setWhiteModeByZone(zone, SunriseService.this);
+                }
+                else {
+                    // Set custom color (it's a decimal that can be converted to byte)
+                    MiLightIntegration.setColorByZone(zone, color, SunriseService.this);
+                }
 
                 // Write update interval to log
                 Log.d(Logging.TAG, "Starting sunrise, incrementing brightness every " + brightnessUpdateInterval + "ms");

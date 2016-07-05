@@ -22,6 +22,9 @@ public class MiLightIntegration {
     // Amount of time it takes for the bulb to whiten (in millis)
     public static final int WHITEN_DURATION_MS = 1000;
 
+    // Amount of time it takes for the bulb to change color (in millis)
+    public static final int COLOR_CHANGE_MS = 1000;
+
     public static void turnOnAndSelectZone(int zone, Context context) throws Exception {
         // Zone validation
         validateZone(zone);
@@ -83,6 +86,23 @@ public class MiLightIntegration {
 
         // Log it
         Log.d(Logging.TAG, "Set white mode for zone " + zone);
+    }
+
+    public static void setColorByZone(int zone, int color, Context context) throws Exception {
+        // Zone validation
+        validateZone(zone);
+
+        // Prepare the color command
+        byte[] colorCommand = {0x40, (byte) color, 0x55};
+
+        // Send it
+        broadcastCommand(colorCommand, context);
+
+        // Wait a bit before sending other commands so it's registered
+        Thread.sleep(COLOR_CHANGE_MS);
+
+        // Log it
+        Log.d(Logging.TAG, "Set color to " + color + " for zone " + zone);
     }
 
     public static void setBrightnessByZone(int percent, int zone, Context context) throws Exception {
