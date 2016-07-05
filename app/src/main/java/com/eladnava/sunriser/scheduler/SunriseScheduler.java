@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
-import com.eladnava.sunriser.services.SunriseAlarm;
+import com.eladnava.sunriser.services.SunriseService;
 import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.SystemServices;
 import com.eladnava.sunriser.utils.formatters.CountdownFormatter;
@@ -64,7 +64,7 @@ public class SunriseScheduler {
 
     private static PendingIntent getSunriseAlarmPendingIntent(Context context) {
         // Set the intent to start our sunrise alarm service
-        Intent intent = new Intent(context, SunriseAlarm.class);
+        Intent intent = new Intent(context, SunriseService.class);
 
         // Convert to pending intent
         return PendingIntent.getService(context, 0, intent, 0);
