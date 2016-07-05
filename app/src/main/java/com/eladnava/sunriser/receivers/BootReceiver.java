@@ -13,7 +13,7 @@ public class BootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // Make sure the right intent was provided
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            // Log the event
+            // Log phone startup
             Log.d(Logging.TAG, "Boot completed");
 
             // Reschedule sunrise alarm (without toast)

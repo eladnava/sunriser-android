@@ -36,7 +36,7 @@
         </activity>
 
         <!-- Sunrise Alarm Service -->
-        <service android:name=".services.SunriseAlarm" />
+        <service android:name=".services.SunriseService" />
         <service android:name=".services.MoonlightService" />
 
         <!-- Boot Completed Receiver -->

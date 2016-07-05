@@ -7,7 +7,6 @@ import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.integrations.bindings.MiLightBindings;
 import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.Networking;
-import com.eladnava.sunriser.utils.ThreadUtils;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -34,7 +33,7 @@ public class MiLightIntegration {
         broadcastCommand(zoneSelectionCommand, context);
 
         // Wait a bit before sending other commands (so that the command registers successfully)
-        ThreadUtils.sleepExact(SELECT_ZONE_DELAY_MS);
+        Thread.sleep(SELECT_ZONE_DELAY_MS);
     }
 
     private static void validateZone(int zone) throws Exception {
@@ -63,7 +62,7 @@ public class MiLightIntegration {
         MiLightIntegration.setBrightnessByZone(1, zone, context);
 
         // Wait X amount of seconds before turning off the light
-        ThreadUtils.sleepExact(FADE_OUT_DURATION_MS);
+        Thread.sleep(FADE_OUT_DURATION_MS);
 
         // Turn off the bulb since we should have woken up by now
         MiLightIntegration.killLightByZone(zone, context);
@@ -80,7 +79,7 @@ public class MiLightIntegration {
         broadcastCommand(whiteModeCommand, context);
 
         // Wait a bit before sending other commands so it's registered
-        ThreadUtils.sleepExact(WHITEN_DURATION_MS);
+        Thread.sleep(WHITEN_DURATION_MS);
 
         // Log it
         Log.d(Logging.TAG, "Set white mode for zone " + zone);
@@ -108,7 +107,7 @@ public class MiLightIntegration {
         broadcastCommand(brightnessCommand, context);
 
         // Log it
-        Log.d(Logging.TAG, "Set brightness to " + percent + "% for zone " + zone);
+        Log.d(Logging.TAG, "Setting brightness to " + percent + "% for zone " + zone);
     }
 
     private static void broadcastCommand(byte[] buffer, Context context) throws Exception {

@@ -18,10 +18,9 @@ import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.integrations.MiLightIntegration;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
 import com.eladnava.sunriser.services.MoonlightService;
-import com.eladnava.sunriser.services.SunriseAlarm;
+import com.eladnava.sunriser.services.SunriseService;
 import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.Networking;
-import com.eladnava.sunriser.utils.ThreadUtils;
 import com.eladnava.sunriser.utils.intents.IntentExtras;
 
 public class Main extends AppCompatActivity {
@@ -74,13 +73,13 @@ public class Main extends AppCompatActivity {
 
     private void testSunriseAlarm() {
         // Kill the sunrise alarm service (in case it's running)
-        stopService(new Intent(this, SunriseAlarm.class));
+        stopService(new Intent(this, SunriseService.class));
 
         // Kill the moonlight service (in case it's running)
         stopService(new Intent(this, MoonlightService.class));
 
         // Prepare sunrise alarm service intent
-        Intent testSunrise = new Intent(Main.this, SunriseAlarm.class);
+        Intent testSunrise = new Intent(Main.this, SunriseService.class);
 
         // Set to "test" mode
         testSunrise.putExtra(IntentExtras.SUNRISE_ALARM_TEST, true);
@@ -137,7 +136,7 @@ public class Main extends AppCompatActivity {
 
     private void enableMoonlightMode() {
         // Kill the sunrise alarm service (in case it's running)
-        stopService(new Intent(this, SunriseAlarm.class));
+        stopService(new Intent(this, SunriseService.class));
 
         // Kill the previous moonlight service (in case it's running)
         stopService(new Intent(this, MoonlightService.class));
@@ -148,7 +147,7 @@ public class Main extends AppCompatActivity {
 
     private void killLight() {
         // Kill the sunrise alarm service (in case it's running)
-        stopService(new Intent(this, SunriseAlarm.class));
+        stopService(new Intent(this, SunriseService.class));
 
         // Kill the moonlight service (in case it's running)
         stopService(new Intent(this, MoonlightService.class));
@@ -163,7 +162,8 @@ public class Main extends AppCompatActivity {
 
                     // Turn off the light for the selected zone
                     MiLightIntegration.fadeOutLightByZone(zone, Main.this);
-                } catch (Exception exc) {
+                }
+                catch (Exception exc) {
                     // Log errors to logcat
                     Log.e(Logging.TAG, "Kill error", exc);
                 }
