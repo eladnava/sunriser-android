@@ -16,8 +16,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class SunriseService extends Service {
-    Timer mDaylightTimer;
     Timer mSunriseTimer;
+    Timer mDaylightTimer;
 
     boolean mIsTesting;
     int mCurrentBrightness;

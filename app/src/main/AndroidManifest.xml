@@ -40,14 +40,18 @@
         <service android:name=".services.MoonlightService" />
 
         <!-- Boot Completed Receiver -->
-        <receiver android:name=".receivers.BootReceiver">
+        <receiver android:name=".receivers.BootCompleted">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
+        <!-- Moonlight Reminder Receiver -->
+        <receiver android:name=".receivers.ShowMoonlightReminder" />
+        <receiver android:name=".receivers.HideMoonlightReminder" />
+
         <!-- Alarm Changed Receiver -->
-        <receiver android:name=".receivers.AlarmChangedReceiver">
+        <receiver android:name=".receivers.AlarmChanged">
             <intent-filter>
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
             </intent-filter>

@@ -40,6 +40,11 @@ public class AppPreferences {
         return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.moonlight_duration_pref), context.getString(R.string.moonlight_duration_default)));
     }
 
+    public static int getMoonlightReminderHours(Context context) {
+        // Return moonlight reminder in hours from SharedPreferences
+        return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.moonlight_reminder_pref), context.getString(R.string.moonlight_reminder_default)));
+    }
+
     public static int getSunriseDurationMinutes(Context context) {
         // Return sunrise duration in minutes from SharedPreferences
         return Integer.parseInt(SystemServices.getSharedPreferences(context).getString(context.getString(R.string.sunrise_duration_pref), context.getString(R.string.sunrise_duration_default)));

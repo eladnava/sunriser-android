@@ -9,8 +9,10 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.eladnava.sunriser.config.Logging;
+import com.eladnava.sunriser.config.Notifications;
 import com.eladnava.sunriser.integrations.MiLightIntegration;
 import com.eladnava.sunriser.utils.AppPreferences;
+import com.eladnava.sunriser.utils.SystemServices;
 
 public class MoonlightService extends Service {
     AsyncMoonlightTask mAlarmTask;
@@ -21,6 +23,9 @@ public class MoonlightService extends Service {
 
         // Log startup
         Log.d(Logging.TAG, "MoonlightService started");
+
+        // Clear moonlight reminder notification (if displayed)
+        SystemServices.getNotificationManager(this).cancel(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID);
     }
 
     @Override

@@ -9,7 +9,7 @@ import android.util.Log;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.scheduler.SunriseScheduler;
 
-public class AlarmChangedReceiver extends BroadcastReceiver {
+public class AlarmChanged extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // Make sure the right intent was provided

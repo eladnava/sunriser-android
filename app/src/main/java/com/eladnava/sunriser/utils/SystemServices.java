@@ -1,6 +1,7 @@
 package com.eladnava.sunriser.utils;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -10,6 +11,7 @@ public class SystemServices {
     private static AlarmManager mAlarmManager;
     private static SharedPreferences mSharedPreferences;
     private static ConnectivityManager mConnectivityManager;
+    private static NotificationManager mNotificationManager;
 
     public static SharedPreferences getSharedPreferences(Context context) {
         // First time?
@@ -42,5 +44,16 @@ public class SystemServices {
 
         // Return cached instance
         return mConnectivityManager;
+    }
+
+    public static NotificationManager getNotificationManager(Context context) {
+        // First time?
+        if (mNotificationManager == null) {
+            // Acquire system service
+            mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+
+        // Return cached instance
+        return mNotificationManager;
     }
 }

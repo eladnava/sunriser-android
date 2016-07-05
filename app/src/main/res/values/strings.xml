@@ -69,6 +69,17 @@
     <string name="moonlight_duration_pref">moonlight_duration</string>
     <string name="moonlight_duration_default">3</string>
 
+    <!-- Moonlight Reminder -->
+    <string name="moonlight_reminder">Moonlight Reminder</string>
+    <string name="moonlight_reminder_desc">Display a notification X hours before the alarm to go to sleep and turn on moonlight mode</string>
+    <string name="moonlight_reminder_pref">moonlight_reminder</string>
+    <string name="moonlight_reminder_default">8</string>
+
+    <!-- Moonlight Reminder Notification -->
+    <string name="moonlight_reminder_notification">Time for bed</string>
+    <string name="moonlight_reminder_notification_desc">Good night, sweet dreams!</string>
+    <string name="moonlight_reminder_notification_action">Enable Moonlight Mode</string>
+
     <!-- MiLight Zone -->
     <string name="zone">Light Zone</string>
     <string name="zone_desc">Choose the desired light zone</string>
