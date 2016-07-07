@@ -21,6 +21,9 @@ public class SunriseScheduler {
         // Clear all previously-scheduled sunrise alarms
         SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
 
+        // Cancel any previously scheduled moonlight reminders
+        SystemServices.getAlarmManager(context).cancel(getMoonlightReminderPendingIntent(context));
+
         // App disabled?
         if (!AppPreferences.isAppEnabled(context)) {
             // Don't reschedule any alarms
