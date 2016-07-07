@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.eladnava.sunriser.alarms.SystemClock;
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.config.Notifications;
+import com.eladnava.sunriser.receivers.HideMoonlightReminder;
 import com.eladnava.sunriser.receivers.ShowMoonlightReminder;
 import com.eladnava.sunriser.services.SunriseService;
 import com.eladnava.sunriser.utils.AppPreferences;
@@ -23,6 +24,9 @@ public class SunriseScheduler {
 
         // Cancel any previously scheduled moonlight reminders
         SystemServices.getAlarmManager(context).cancel(getMoonlightReminderPendingIntent(context));
+
+        // Cancel any previously scheduled moonlight hide tasks
+        SystemServices.getAlarmManager(context).cancel(getHideReminderPendingIntent(context));
 
         // App disabled?
         if (!AppPreferences.isAppEnabled(context)) {
@@ -117,6 +121,14 @@ public class SunriseScheduler {
     private static PendingIntent getMoonlightReminderPendingIntent(Context context) {
         // Set the intent to display a moonlight reminder
         Intent intent = new Intent(context, ShowMoonlightReminder.class);
+
+        // Convert to pending intent
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
+    }
+
+    private static PendingIntent getHideReminderPendingIntent(Context context) {
+        // Set the intent to hide the moonlight reminder
+        Intent intent = new Intent(context, HideMoonlightReminder.class);
 
         // Convert to pending intent
         return PendingIntent.getBroadcast(context, 0, intent, 0);
