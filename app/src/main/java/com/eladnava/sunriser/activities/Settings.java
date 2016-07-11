@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.eladnava.sunriser.R;
+import com.eladnava.sunriser.utils.SingletonServices;
 import com.eladnava.sunriser.utils.compatibility.AppCompatPreferenceActivity;
 
 public class Settings extends AppCompatPreferenceActivity {
@@ -14,6 +15,14 @@ public class Settings extends AppCompatPreferenceActivity {
 
         // Set-up activity UI
         initializeUI();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // Reset the API client in case we changed any router-related / zone settings
+        SingletonServices.resetMilightAPI();
     }
 
     void displayBackButton() {

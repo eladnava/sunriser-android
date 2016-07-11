@@ -7,7 +7,7 @@ import android.net.NetworkInfo;
 public class Networking {
     public static boolean isWiFiConnected(Context context) {
         // Get system connectivity manager
-        ConnectivityManager cm = SystemServices.getConnectivityManager(context);
+        ConnectivityManager cm = SingletonServices.getConnectivityManager(context);
 
         // Attempt to acquire active network info
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

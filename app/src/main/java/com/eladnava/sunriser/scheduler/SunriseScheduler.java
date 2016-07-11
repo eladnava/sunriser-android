@@ -14,19 +14,19 @@ import com.eladnava.sunriser.receivers.HideMoonlightReminder;
 import com.eladnava.sunriser.receivers.ShowMoonlightReminder;
 import com.eladnava.sunriser.services.SunriseService;
 import com.eladnava.sunriser.utils.AppPreferences;
-import com.eladnava.sunriser.utils.SystemServices;
+import com.eladnava.sunriser.utils.SingletonServices;
 import com.eladnava.sunriser.utils.formatters.CountdownFormatter;
 
 public class SunriseScheduler {
     public static void rescheduleSunriseAlarm(Context context, boolean showToast) {
         // Clear all previously-scheduled sunrise alarms
-        SystemServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
+        SingletonServices.getAlarmManager(context).cancel(getSunriseAlarmPendingIntent(context));
 
         // Cancel any previously scheduled moonlight reminders
-        SystemServices.getAlarmManager(context).cancel(getMoonlightReminderPendingIntent(context));
+        SingletonServices.getAlarmManager(context).cancel(getMoonlightReminderPendingIntent(context));
 
         // Cancel any previously scheduled moonlight hide tasks
-        SystemServices.getAlarmManager(context).cancel(getHideReminderPendingIntent(context));
+        SingletonServices.getAlarmManager(context).cancel(getHideReminderPendingIntent(context));
 
         // App disabled?
         if (!AppPreferences.isAppEnabled(context)) {
@@ -56,7 +56,7 @@ public class SunriseScheduler {
         }
 
         // Schedule the sunrise alarm by specifying the start time & pending intent to execute (the sunrise service)
-        SystemServices.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, startSunriseTimestamp, getSunriseAlarmPendingIntent(context));
+        SingletonServices.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, startSunriseTimestamp, getSunriseAlarmPendingIntent(context));
 
         // Schedule a reminder to go to sleep
         scheduleMoonlightReminder(nextAlarm, startSunriseTimestamp, context);
@@ -76,7 +76,7 @@ public class SunriseScheduler {
 
     private static void scheduleMoonlightReminder(long nextAlarm, long startSunriseTimestamp, Context context) {
         // Cancel old moonlight reminder notification (if it's currently showing)
-        SystemServices.getNotificationManager(context).cancel(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID);
+        SingletonServices.getNotificationManager(context).cancel(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID);
 
         // Get moonlight reminder hours preference
         int moonlightReminderHours = AppPreferences.getMoonlightReminderHours(context);
@@ -101,7 +101,7 @@ public class SunriseScheduler {
                 }
                 else {
                     // Schedule the moonlight reminder in the future
-                    SystemServices.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, remindMoonlightTimestamp, getMoonlightReminderPendingIntent(context));
+                    SingletonServices.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, remindMoonlightTimestamp, getMoonlightReminderPendingIntent(context));
 
                     // Log the scheduled reminder
                     Log.d(Logging.TAG, "Moonlight reminder in " + ((remindMoonlightTimestamp - System.currentTimeMillis()) / 1000 / 60 / 60) + " hours");

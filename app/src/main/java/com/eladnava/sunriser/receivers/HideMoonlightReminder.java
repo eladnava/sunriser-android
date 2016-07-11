@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.eladnava.sunriser.config.Logging;
 import com.eladnava.sunriser.config.Notifications;
-import com.eladnava.sunriser.utils.SystemServices;
+import com.eladnava.sunriser.utils.SingletonServices;
 
 public class HideMoonlightReminder extends BroadcastReceiver {
     @Override
@@ -16,6 +16,6 @@ public class HideMoonlightReminder extends BroadcastReceiver {
         Log.d(Logging.TAG, "Hiding moonlight reminder notification (if still displayed)");
 
         // Cancel moonlight reminder notification
-        SystemServices.getNotificationManager(context).cancel(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID);
+        SingletonServices.getNotificationManager(context).cancel(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID);
     }
 }

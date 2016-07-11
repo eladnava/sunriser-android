@@ -15,7 +15,7 @@ import com.eladnava.sunriser.config.Notifications;
 import com.eladnava.sunriser.services.MoonlightService;
 import com.eladnava.sunriser.utils.AppPreferences;
 import com.eladnava.sunriser.utils.Networking;
-import com.eladnava.sunriser.utils.SystemServices;
+import com.eladnava.sunriser.utils.SingletonServices;
 
 public class ShowMoonlightReminder extends BroadcastReceiver {
     @Override
@@ -43,13 +43,13 @@ public class ShowMoonlightReminder extends BroadcastReceiver {
             .addAction(R.mipmap.ic_moonlight, context.getString(R.string.moonlight_reminder_notification_action), getMoonlightServicePendingIntent(context));
 
         // Display notification
-        SystemServices.getNotificationManager(context).notify(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID, mBuilder.build());
+        SingletonServices.getNotificationManager(context).notify(Notifications.MOONLIGHT_REMINDER_NOTIFICATION_ID, mBuilder.build());
 
         // Hide it after half of the reminder hours pass (make this configurable?)
         long hideReminderTimestamp = System.currentTimeMillis() + (1000 * 60 * 60 * (moonlightReminderHours / 2));
 
         // Schedule it to be cancelled in the future
-        SystemServices.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, hideReminderTimestamp, getHideReminderPendingIntent(context));
+        SingletonServices.getAlarmManager(context).setExact(AlarmManager.RTC_WAKEUP, hideReminderTimestamp, getHideReminderPendingIntent(context));
 
         // Log what we're doing
         Log.d(Logging.TAG, "Displaying moonlight reminder (attempt to hide it in " + ( ( hideReminderTimestamp - System.currentTimeMillis() ) / 1000 / 60 / 60 ) + " hours)");
