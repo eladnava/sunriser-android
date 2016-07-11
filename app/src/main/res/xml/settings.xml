@@ -59,6 +59,13 @@
             android:summary="@string/moonlight_color_desc"
             android:title="@string/moonlight_color" />
         <EditTextPreference
+            android:inputType="number"
+            android:defaultValue="@string/moonlight_brightness_default"
+            android:dependency="@string/enable_pref"
+            android:key="@string/moonlight_brightness_pref"
+            android:summary="@string/moonlight_brightness_desc"
+            android:title="@string/moonlight_brightness" />
+        <EditTextPreference
             android:defaultValue="@string/moonlight_duration_default"
             android:inputType="number"
             android:key="@string/moonlight_duration_pref"

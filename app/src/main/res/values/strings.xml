@@ -63,6 +63,12 @@
     <string name="moonlight_color_pref">moonlight_color</string>
     <string name="moonlight_color_default">-1</string>
 
+    <!-- Moonlight Brightness -->
+    <string name="moonlight_brightness">Moonlight Brightness</string>
+    <string name="moonlight_brightness_desc" formatted="false">The brightness % of the bulb in moonlight mode</string>
+    <string name="moonlight_brightness_pref">moonlight_brightness</string>
+    <string name="moonlight_brightness_default">30</string>
+
     <!-- Moonlight Duration -->
     <string name="moonlight_duration">Moonlight Duration</string>
     <string name="moonlight_duration_desc">Leave the light on for X minutes after manually turning on moonlight mode</string>

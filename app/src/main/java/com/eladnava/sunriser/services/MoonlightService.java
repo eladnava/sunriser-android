@@ -63,8 +63,11 @@ public class MoonlightService extends Service {
             MiLightIntegration.setColorByZone(zone, color, context);
         }
 
-        // Set brightness level to 30% (should be enough for a night light) -- think about making this configurable via settings
-        MiLightIntegration.setBrightnessByZone(30, zone, context);
+        // Get the desired moonlight brightness level
+        int moonlightBrightness = AppPreferences.getMoonlightBrightnessLevel(context);
+
+        // Set brightness level to desired brightness level
+        MiLightIntegration.setBrightnessByZone(moonlightBrightness, zone, context);
 
         // Wait X amount of seconds before sending the white mode command
         Thread.sleep(MiLightIntegration.FADE_OUT_DURATION_MS);
