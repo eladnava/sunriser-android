@@ -90,7 +90,7 @@
     <string name="zone">Light Zone</string>
     <string name="zone_desc">Choose the desired light zone</string>
     <string name="zone_pref">milight_zone</string>
-    <string name="zone_default">4</string>
+    <string name="zone_default">1</string>
 
     <!-- MiLight Host -->
     <string name="host">Router Host</string>
