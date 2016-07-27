@@ -102,10 +102,13 @@ public class SunriseService extends Service {
                 // Make sure update interval is at least 50ms for timer interval to work correctly
                 brightnessUpdateInterval = (brightnessUpdateInterval < 50) ? 50 : brightnessUpdateInterval;
 
+                // Turn on the bulb
+                mMilightAPI.turnOn();
+
                 // Set brightness level to 0% and select the bulb (to avoid a 100% full blast if that was the bulb's previous state before it was turned off)
                 mMilightAPI.setBrightness(0);
 
-                // Wait X amount of seconds before sending the white mode command
+                // Wait X amount of seconds before sending the color command
                 Thread.sleep(MilightTimeouts.FADE_OUT_DURATION_MS);
 
                 // Get sunrise color from preferences
