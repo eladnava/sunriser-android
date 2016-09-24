@@ -65,14 +65,14 @@ public class MoonlightService extends Service {
             mMilightAPI.setColorRGB(color);
         }
 
+        // Wait X amount of seconds before sending the brightness command
+        Thread.sleep(MilightTimeouts.TURN_ON_DURATION_MS);
+
         // Get the desired moonlight brightness level
         int moonlightBrightness = AppPreferences.getMoonlightBrightnessLevel(context);
 
         // Set brightness level to desired brightness level
         mMilightAPI.setBrightness(moonlightBrightness);
-
-        // Wait X amount of seconds before sending the white mode command
-        Thread.sleep(MilightTimeouts.FADE_OUT_DURATION_MS);
 
         // Write to log
         Log.d(Logging.TAG, "Entering moonlight mode for " + moonlightDuration + "ms");
