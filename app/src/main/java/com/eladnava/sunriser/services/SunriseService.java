@@ -1,6 +1,9 @@
 package com.eladnava.sunriser.services;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -19,7 +22,6 @@ import java.util.TimerTask;
 
 public class SunriseService extends Service {
     Timer mSunriseTimer;
-    Timer mDaylightTimer;
 
     boolean mIsTesting;
     int mCurrentBrightness;
@@ -38,7 +40,6 @@ public class SunriseService extends Service {
 
         // Create timers to handle future tasks
         mSunriseTimer = new Timer();
-        mDaylightTimer = new Timer();
     }
 
     @Override
@@ -57,6 +58,9 @@ public class SunriseService extends Service {
         // Start the sunrise (schedule future brightness updates and daylight kill)
         mSunriseTimer.schedule(new StartSunriseTask(), 0);
 
+        // Cancel any scheduled daylight kill
+        SingletonServices.getAlarmManager(SunriseService.this).cancel(getDaylightCompletedPendingIntent(SunriseService.this));
+
         // Don't restart this service
         return START_NOT_STICKY;
     }
@@ -68,7 +72,6 @@ public class SunriseService extends Service {
 
         // Cancel any pending timers
         mSunriseTimer.cancel();
-        mDaylightTimer.cancel();
 
         // Now we're ready to be destroyed
         super.onDestroy();
@@ -179,29 +182,23 @@ public class SunriseService extends Service {
                 // Log daylight kill scheduling
                 Log.d(Logging.TAG, "Scheduling daylight kill " + daylightDuration + "ms from now");
 
-                // Set one-time RTC wake-up alarm to kill the daylight
-                mDaylightTimer.schedule(new KillDaylightTask(), daylightDuration);
+                // Convert to timestamp
+                long daylightKillTimestamp = System.currentTimeMillis() + daylightDuration;
+
+                // Schedule it to be killed in the future
+                SingletonServices.getAlarmManager(SunriseService.this).setExact(AlarmManager.RTC_WAKEUP, daylightKillTimestamp, getDaylightCompletedPendingIntent(SunriseService.this));
+
+                // All done with service, stop it now
+                stopSelf();
             }
         }
     }
 
-    private class KillDaylightTask extends TimerTask {
-        @Override
-        public void run() {
-            // Write to log
-            Log.d(Logging.TAG, "Killing daylight mode");
+    private static PendingIntent getDaylightCompletedPendingIntent(Context context) {
+        // Set the intent to hide the moonlight reminder
+        Intent intent = new Intent(context, KillDaylightService.class);
 
-            try {
-                // Turn off the bulb since we should have woken up by now
-                mMilightAPI.fadeOut();
-            }
-            catch (Exception exc) {
-                // Log errors to logcat
-                Log.e(Logging.TAG, "KillDaylightTask error", exc);
-            }
-
-            // All done with service, stop it now
-            stopSelf();
-        }
+        // Convert to pending intent
+        return PendingIntent.getService(context, 0, intent, 0);
     }
 }

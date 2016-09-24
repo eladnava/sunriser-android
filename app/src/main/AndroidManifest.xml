@@ -35,10 +35,6 @@
                 android:value="com.eladnava.sunriser.activities.Main" />
         </activity>
 
-        <!-- Sunrise Alarm Service -->
-        <service android:name=".services.SunriseService" />
-        <service android:name=".services.MoonlightService" />
-
         <!-- Boot Completed Receiver -->
         <receiver android:name=".receivers.BootCompleted">
             <intent-filter>
@@ -46,16 +42,20 @@
             </intent-filter>
         </receiver>
 
-        <!-- Moonlight Reminder Receiver -->
-        <receiver android:name=".receivers.ShowMoonlightReminder" />
-        <receiver android:name=".receivers.HideMoonlightReminder" />
-
         <!-- Alarm Changed Receiver -->
         <receiver android:name=".receivers.AlarmChanged">
             <intent-filter>
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
             </intent-filter>
         </receiver>
-    </application>
 
+        <!-- Broadcast Receivers -->
+        <receiver android:name=".receivers.ShowMoonlightReminder" />
+        <receiver android:name=".receivers.HideMoonlightReminder" />
+
+        <!-- Services -->
+        <service android:name=".services.SunriseService" />
+        <service android:name=".services.MoonlightService" />
+        <service android:name=".services.KillDaylightService" />
+    </application>
 </manifest>
